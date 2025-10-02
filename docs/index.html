@@ -5,13 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHILD - Intuitive Programming for Everyone</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #4facfe;
+            --secondary: #16213e;
+            --accent: #f7b731;
+            --bg-dark: #0f0f1e;
+            --bg-light: #f7f7fa;
+            --text-dark: #eee;
+            --text-light: #222;
+            --card-dark: #1a1a2e;
+            --card-light: #fff;
+            --border-dark: #4facfe33;
+            --border-light: #e0e0e0;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: #0f0f1e;
+            color: #eee;
+            background: var(--bg-dark);
+            transition: background 0.3s, color 0.3s;
         }
+        .light-theme {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+        .light-theme .hero,
+        .light-theme .features,
+        .light-theme .installation,
+        .light-theme .code-example {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+        .light-theme .feature-card,
+        .light-theme .code-block,
+        .light-theme .step,
+        .light-theme .command-box {
+            background: var(--card-light);
+            color: var(--text-light);
+            border-color: var(--border-light);
+        }
+        .light-theme .feature-title,
+        .light-theme .code-title,
+        .light-theme .step-title {
+            color: #2d5be3;
+        }
+        .light-theme .section-title {
+            color: #2d5be3;
+        }
+        .light-theme .feature-desc {
+            color: #444;
+        }
+        .light-theme .btn-primary {
+            background: #2d5be3;
+            color: #fff;
+        }
+        .light-theme .btn-primary:hover {
+            background: #4facfe;
+            color: #fff;
+        }
+        .light-theme .btn-secondary {
+            background: transparent;
+            color: #2d5be3;
+            border: 2px solid #2d5be3;
+        }
+        .light-theme .btn-secondary:hover {
+            background: #2d5be3;
+            color: #fff;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            background: var(--card-dark);
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 22px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s, color 0.3s;
+        }
+        .light-theme .theme-toggle {
+            background: var(--card-light);
+            color: #2d5be3;
+        }
+        /* --- Your existing CSS below (unchanged) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -141,6 +222,54 @@
             transition: color 0.3s;
         }
         .footer-links a:hover { color: #00f2fe; }
+        .fade-section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(.4,0,.2,1), transform 1s cubic-bezier(.4,0,.2,1);
+        }
+        .fade-section.visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        .animated-icon {
+            width: 48px; height: 48px; display: inline-block; vertical-align: middle;
+        }
+        .draw-path {
+            stroke-dasharray: 400;
+            stroke-dashoffset: 400;
+            animation: draw 2s cubic-bezier(.77,0,.18,1) forwards;
+        }
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+        /* Ambient background motion */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: -200px; right: -200px; bottom: -200px;
+            z-index: 0;
+            background: radial-gradient(circle at 20% 30%, #4facfe55 0, transparent 60%),
+                        radial-gradient(circle at 80% 70%, #764ba255 0, transparent 60%),
+                        radial-gradient(circle at 60% 10%, #f7b73133 0, transparent 70%);
+            animation: bgmove 18s linear infinite alternate;
+        }
+        @keyframes bgmove {
+            0% { filter: blur(0px); }
+            100% { filter: blur(30px) brightness(1.1); }
+        }
+        /* Microinteractions: ripple effect */
+        .btn { position: relative; overflow: hidden; }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background: rgba(79,172,254,0.25);
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            to { transform: scale(2.5); opacity: 0; }
+        }
         @media (max-width: 768px) {
             .logo { font-size: 50px; }
             .tagline { font-size: 22px; }
@@ -150,6 +279,7 @@
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
@@ -164,12 +294,17 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features">
+    <section class="features fade-section">
         <div class="container">
             <h2 class="section-title">Why Choose CHILD?</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">📖</div>
+                    <div class="feature-icon">
+                      <svg class="animated-icon" viewBox="0 0 48 48" fill="none" stroke="#4facfe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path class="draw-path" d="M8 40V12a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v28"/>
+                        <path class="draw-path" d="M16 16h16M16 24h16M16 32h8"/>
+                      </svg>
+                    </div>
                     <h3 class="feature-title">English-Like Syntax</h3>
                     <p class="feature-desc">Write code that reads like plain English. No cryptic symbols or confusing syntax.</p>
                 </div>
@@ -203,7 +338,7 @@
     </section>
 
     <!-- Code Example Section -->
-    <section class="code-example">
+    <section class="code-example fade-section">
         <div class="container">
             <h2 class="section-title">See It In Action</h2>
             <div class="code-container">
@@ -244,7 +379,7 @@ numbers = [<span class="number">1</span>, <span class="number">2</span>, <span c
     </section>
 
     <!-- Installation Section -->
-    <section class="installation">
+    <section class="installation fade-section">
         <div class="container">
             <h2 class="section-title">Get Started in 3 Steps</h2>
             <div class="install-steps">
@@ -295,5 +430,69 @@ numbers = [<span class="number">1</span>, <span class="number">2</span>, <span c
         <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
         <p>Licensed under GPL v3 | Open Source Forever</p>
     </footer>
+    <script>
+        function setTheme(theme) {
+            if(theme === "light") {
+                document.body.classList.add("light-theme");
+                document.querySelector(".theme-toggle").textContent = "⨀ Light";
+            } else {
+                document.body.classList.remove("light-theme");
+                document.querySelector(".theme-toggle").textContent = "⨂ Dark";
+            }
+            localStorage.setItem("theme", theme);
+        }
+        function toggleTheme() {
+            if(document.body.classList.contains("light-theme")) {
+                setTheme("dark");
+            } else {
+                setTheme("light");
+            }
+        }
+        (function() {
+            let theme = localStorage.getItem("theme");
+            if(!theme) {
+                theme = window.matchMedia('(prefers-color-scheme: light)').matches ? "light" : "dark";
+            }
+            setTheme(theme);
+        })();
+    </script>
+    <script>
+        // Fade-in on scroll for sections
+        function animateSections() {
+            document.querySelectorAll('.fade-section').forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if(rect.top < window.innerHeight * 0.92) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+        window.addEventListener('scroll', animateSections);
+        window.addEventListener('DOMContentLoaded', animateSections);
+
+        // Button ripple microinteraction
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const circle = document.createElement('span');
+                circle.className = 'ripple';
+                const rect = btn.getBoundingClientRect();
+                circle.style.left = (e.clientX - rect.left) + 'px';
+                circle.style.top = (e.clientY - rect.top) + 'px';
+                circle.style.width = circle.style.height = Math.max(rect.width, rect.height) + 'px';
+                btn.appendChild(circle);
+                setTimeout(() => circle.remove(), 600);
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^=\"#\"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,82 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Modern gradient background -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Accent gradient for text -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00f2fe;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Subtle shadow -->
+    <filter id="subtleShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bgGradient)"/>
+  
+  <!-- Geometric accent elements -->
+  <path d="M 0 100 L 150 50 L 150 150 Z" fill="#00f2fe" opacity="0.05"/>
+  <path d="M 800 300 L 650 250 L 650 350 Z" fill="#4facfe" opacity="0.05"/>
+  
+  <!-- Code bracket decorations -->
+  <g opacity="0.15">
+    <text x="40" y="120" font-family="'Courier New', monospace" font-size="80" fill="#00f2fe" font-weight="300">{</text>
+    <text x="725" y="320" font-family="'Courier New', monospace" font-size="80" fill="#00f2fe" font-weight="300">}</text>
+  </g>
+  
+  <!-- Main CHILD text -->
+  <g filter="url(#subtleShadow)">
+    <text x="400" y="210" 
+          font-family="'Arial', 'Helvetica', sans-serif" 
+          font-size="120" 
+          font-weight="700" 
+          fill="url(#textGradient)" 
+          text-anchor="middle"
+          letter-spacing="8">CHILD</text>
+  </g>
+  
+  <!-- Tagline -->
+  <text x="400" y="260" 
+        font-family="'Arial', sans-serif" 
+        font-size="22" 
+        fill="#ffffff" 
+        text-anchor="middle" 
+        opacity="0.7"
+        letter-spacing="3">INTUITIVE PROGRAMMING FOR EVERYONE</text>
+  
+  <!-- Subtitle explaining the acronym -->
+  <text x="400" y="295" 
+        font-family="'Courier New', monospace" 
+        font-size="16" 
+        fill="#4facfe" 
+        text-anchor="middle" 
+        opacity="0.6">Computational High-level Instruction Language for Dummies</text>
+  
+  <!-- Minimalist accent line -->
+  <line x1="250" y1="320" x2="550" y2="320" stroke="#00f2fe" stroke-width="2" opacity="0.4"/>
+  
+  <!-- Version/License info -->
+  <text x="400" y="350" 
+        font-family="'Arial', sans-serif" 
+        font-size="12" 
+        fill="#ffffff" 
+        text-anchor="middle" 
+        opacity="0.4">Open Source • GPL v3 • github.com/RoyalPgYtPc</text>
+</svg>

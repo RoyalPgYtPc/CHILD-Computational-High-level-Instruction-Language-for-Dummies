@@ -4,76 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get Started with CHILD</title>
-    <link rel="stylesheet" href="index.html">
     <style>
+        :root {
+            --primary: #4facfe;
+            --secondary: #16213e;
+            --accent: #f7b731;
+            --bg-dark: #0f0f1e;
+            --bg-light: #f7f7fa;
+            --text-dark: #eee;
+            --text-light: #222;
+            --card-dark: #1a1a2e;
+            --card-light: #fff;
+            --border-dark: #4facfe33;
+            --border-light: #e0e0e0;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #0f0f1e;
-            color: #eee;
-            margin: 0;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: background 0.3s, color 0.3s;
+        }
+        .light-theme {
+            background: var(--bg-light);
+            color: var(--text-light);
         }
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 40px 20px 60px 20px;
         }
-        h1, h2, h3 {
-            color: #4facfe;
+        h1, h2, h3, h4 {
+            color: var(--primary);
             margin-top: 2em;
             margin-bottom: 0.5em;
         }
-        h1 {
-            font-size: 2.5em;
-            text-align: center;
-            margin-top: 1em;
+        h1 { font-size: 2.8em; text-align: center; margin-top: 0.5em; }
+        h2 { font-size: 2em; border-bottom: 1px solid var(--border-dark); padding-bottom: 0.2em; }
+        h3 { font-size: 1.3em; margin-top: 1.5em; }
+        h4 { font-size: 1.1em; margin-top: 1em; }
+        .light-theme h1, .light-theme h2, .light-theme h3, .light-theme h4 {
+            color: #2d5be3;
+            border-bottom: 1px solid var(--border-light);
         }
-        .steps {
-            margin: 2em 0;
+        code, .command-box {
+            font-family: 'Courier New', monospace;
+            background: var(--card-dark);
+            color: #4ecdc4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1em;
         }
+        .light-theme code, .light-theme .command-box {
+            background: var(--card-light);
+            color: #2d5be3;
+        }
+        pre {
+            background: var(--card-dark);
+            color: #fff;
+            padding: 18px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin-bottom: 1.5em;
+            border: 1px solid var(--border-dark);
+        }
+        .light-theme pre {
+            background: var(--card-light);
+            color: #222;
+            border: 1px solid var(--border-light);
+        }
+        pre code { background: none; color: inherit; font-size: 1em; padding: 0; }
+        .keyword { color: #ff6b6b; }
+        .string { color: #4ecdc4; }
+        .number { color: #f7b731; }
+        .comment { color: #888; font-style: italic; }
+        .steps { margin: 2em 0; }
         .step {
-            background: #1a1a2e;
-            border-left: 4px solid #4facfe;
+            background: var(--card-dark);
+            border-left: 4px solid var(--primary);
             border-radius: 10px;
             padding: 24px 24px 18px 24px;
             margin-bottom: 30px;
         }
+        .light-theme .step {
+            background: var(--card-light);
+            border-left: 4px solid #2d5be3;
+        }
         .step-title {
             font-size: 1.3em;
             margin-bottom: 10px;
-            color: #4facfe;
+            color: var(--primary);
         }
+        .light-theme .step-title { color: #2d5be3; }
         .command-box {
-            background: #0f0f1e;
-            padding: 12px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            margin-top: 10px;
-            border: 1px solid rgba(79, 172, 254, 0.2);
+            background: var(--bg-dark);
             color: #4ecdc4;
+            border: 1px solid var(--border-dark);
+        }
+        .light-theme .command-box {
+            background: var(--bg-light);
+            color: #2d5be3;
+            border: 1px solid var(--border-light);
         }
         .demo-section {
-            background: #16213e;
+            background: var(--secondary);
             border-radius: 12px;
             padding: 30px 20px;
             margin-bottom: 2em;
-            border: 1px solid rgba(79, 172, 254, 0.1);
+            border: 1px solid var(--border-dark);
+        }
+        .light-theme .demo-section {
+            background: #eaf1ff;
+            border: 1px solid var(--border-light);
         }
         .demo-title {
-            color: #f7b731;
+            color: var(--accent);
             font-size: 1.2em;
             margin-bottom: 10px;
         }
         .demo-box {
-            background: #1a1a2e;
+            background: var(--card-dark);
             border-radius: 8px;
             padding: 18px;
             margin-bottom: 10px;
-            border: 1px solid rgba(79, 172, 254, 0.15);
+            border: 1px solid var(--border-dark);
+        }
+        .light-theme .demo-box {
+            background: var(--card-light);
+            border: 1px solid var(--border-light);
         }
         .demo-input, .demo-output {
             width: 100%;
             min-height: 60px;
-            background: #0f0f1e;
+            background: var(--bg-dark);
             color: #fff;
             border: none;
             border-radius: 6px;
@@ -82,8 +144,12 @@
             padding: 10px;
             margin-bottom: 10px;
         }
+        .light-theme .demo-input, .light-theme .demo-output {
+            background: var(--bg-light);
+            color: #222;
+        }
         .demo-btn {
-            background: #4facfe;
+            background: var(--primary);
             color: #fff;
             border: none;
             border-radius: 6px;
@@ -94,26 +160,60 @@
         }
         .demo-btn:hover {
             background: #00f2fe;
-            color: #16213e;
+            color: var(--secondary);
         }
-        a {
-            color: #4facfe;
+        .footer {
+            background: #0a0a14;
+            color: #b3b3b3;
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+            margin-top: 60px;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--primary);
             text-decoration: none;
+            transition: color 0.3s;
         }
-        a:hover {
-            color: #00f2fe;
+        .footer-links a:hover { color: #00f2fe; }
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            background: var(--card-dark);
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 22px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s, color 0.3s;
+        }
+        .light-theme .theme-toggle {
+            background: var(--card-light);
+            color: #2d5be3;
         }
         @media (max-width: 700px) {
             .container { padding: 20px 5vw 40px 5vw; }
             h1 { font-size: 2em; }
+            h2 { font-size: 1.3em; }
+            .theme-toggle { top: 10px; right: 10px; padding: 8px 14px; }
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
     <div class="container">
         <h1>🚀 Get Started with CHILD</h1>
         <p>Follow these steps to install CHILD, set up the VS Code extension, and try interactive demos!</p>
-
         <div class="steps">
             <div class="step">
                 <div class="step-title">1. Download CHILD</div>
@@ -127,21 +227,23 @@
             </div>
             <div class="step">
                 <div class="step-title">3. Install the VS Code Extension</div>
-                <p>Get syntax highlighting and auto-completion for CHILD:</p>
-                <div class="command-box">code --install-extension CHILD-Computational-High-level-Instruction-Language-for-Dummies-1.0.0.vsix</div>
-                <p>Or search for <b>CHILD Language</b> in the VS Code Extensions Marketplace.</p>
+                <ol>
+                    <li>Find <code>CHILD-Computational-High-level-Instruction-Language-for-Dummies-1.0.0.vsix</code> in the repo (main folder or releases).</li>
+                    <li>Open VS Code, press <b>Ctrl+Shift+P</b> and select <b>Extensions: Install from VSIX...</b></li>
+                    <li>Choose the <code>.vsix</code> file you downloaded.</li>
+                </ol>
+                <p><b>Note:</b> The extension includes a built-in interpreter. You only need to install it <u>once</u>!</p>
             </div>
             <div class="step">
                 <div class="step-title">4. Run Your First Program</div>
-                <p>Create a file called <code>hello.child</code>:</p>
-                <div class="command-box">say "Hello, World!"</div>
-                <p>Then run it:</p>
+                <p>
+                    <b>In VS Code:</b> Open your <code>hello.child</code> file and click <b>Run</b> (▶️) at the top, or right-click and choose <b>Run CHILD File</b>.<br>
+                    <b>Without VS Code?</b> You can still use the standalone interpreter (<code>child.py</code>, also given in the repo):
+                </p>
                 <div class="command-box">python child.py hello.child</div>
             </div>
         </div>
-
         <h2>Interactive Demos</h2>
-
         <div class="demo-section">
             <div class="demo-title">Demo 1: Say Hello</div>
             <div class="demo-box">
@@ -153,7 +255,6 @@
                 </div>
             </div>
         </div>
-
         <div class="demo-section">
             <div class="demo-title">Demo 2: Ask for Name</div>
             <div class="demo-box">
@@ -167,7 +268,6 @@ say name</textarea>
                 </div>
             </div>
         </div>
-
         <h2>Resources</h2>
         <ul>
             <li><a href="documentation.html">Full Documentation</a></li>
@@ -175,18 +275,44 @@ say name</textarea>
             <li><a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Example Programs</a></li>
         </ul>
     </div>
-    <footer style="background:#0a0a14;color:#b3b3b3;text-align:center;padding:40px 20px;">
-        <div class="footer-links" style="display:flex;justify-content:center;gap:30px;margin-bottom:20px;flex-wrap:wrap;">
+    <div class="footer">
+        <div class="footer-links">
             <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub</a>
             <a href="documentation.html">Documentation</a>
+            <a href="get-started.html">Get Started</a>
             <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
             <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
         </div>
         <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
         <p>Licensed under GPL v3 | Open Source Forever</p>
-    </footer>
+    </div>
     <script>
-        // Enhanced demo runner for multiple demos and ask simulation
+        function setTheme(theme) {
+            if(theme === "light") {
+                document.body.classList.add("light-theme");
+                document.querySelector(".theme-toggle").textContent = "⨀ Light";
+            } else {
+                document.body.classList.remove("light-theme");
+                document.querySelector(".theme-toggle").textContent = "⨂ Dark";
+            }
+            localStorage.setItem("theme", theme);
+        }
+        function toggleTheme() {
+            if(document.body.classList.contains("light-theme")) {
+                setTheme("dark");
+            } else {
+                setTheme("light");
+            }
+        }
+        (function() {
+            let theme = localStorage.getItem("theme");
+            if(!theme) {
+                theme = window.matchMedia('(prefers-color-scheme: light)').matches ? "light" : "dark";
+            }
+            setTheme(theme);
+        })();
+
+        // Demo runner for interactive CHILD code
         function runDemo(inputId, outputId, askMode) {
             const input = document.getElementById(inputId).value;
             let output = '';
@@ -198,7 +324,6 @@ say name</textarea>
                     let match = line.match(/say\s+"([^"]*)"/);
                     if (match) output += match[1] + '\n';
                     else if (line.match(/say\s+([a-zA-Z_][a-zA-Z0-9_]*)/)) {
-                        // say variable
                         let varName = line.match(/say\s+([a-zA-Z_][a-zA-Z0-9_]*)/)[1];
                         output += (remembered[varName] || '[undefined]') + '\n';
                     } else output += '[say] ' + line.slice(4) + '\n';
