@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started with CHILD</title>
+    <link rel="stylesheet" href="index.html">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f0f1e;
+            color: #eee;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px 60px 20px;
+        }
+        h1, h2, h3 {
+            color: #4facfe;
+            margin-top: 2em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-top: 1em;
+        }
+        .steps {
+            margin: 2em 0;
+        }
+        .step {
+            background: #1a1a2e;
+            border-left: 4px solid #4facfe;
+            border-radius: 10px;
+            padding: 24px 24px 18px 24px;
+            margin-bottom: 30px;
+        }
+        .step-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #4facfe;
+        }
+        .command-box {
+            background: #0f0f1e;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            color: #4ecdc4;
+        }
+        .demo-section {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin-bottom: 2em;
+            border: 1px solid rgba(79, 172, 254, 0.1);
+        }
+        .demo-title {
+            color: #f7b731;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .demo-box {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(79, 172, 254, 0.15);
+        }
+        .demo-input, .demo-output {
+            width: 100%;
+            min-height: 60px;
+            background: #0f0f1e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .demo-btn {
+            background: #4facfe;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .demo-btn:hover {
+            background: #00f2fe;
+            color: #16213e;
+        }
+        a {
+            color: #4facfe;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #00f2fe;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 20px 5vw 40px 5vw; }
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Get Started with CHILD</h1>
+        <p>Follow these steps to install CHILD, set up the VS Code extension, and try interactive demos!</p>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-title">1. Download CHILD</div>
+                <p>Clone the repository or download the latest release:</p>
+                <div class="command-box">git clone https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies.git</div>
+            </div>
+            <div class="step">
+                <div class="step-title">2. Install Python</div>
+                <p>Make sure you have <b>Python 3.6+</b> installed. Download from <a href="https://python.org" target="_blank">python.org</a>.</p>
+                <div class="command-box">python --version</div>
+            </div>
+            <div class="step">
+                <div class="step-title">3. Install the VS Code Extension</div>
+                <p>Get syntax highlighting and auto-completion for CHILD:</p>
+                <div class="command-box">code --install-extension CHILD-Computational-High-level-Instruction-Language-for-Dummies-1.0.0.vsix</div>
+                <p>Or search for <b>CHILD Language</b> in the VS Code Extensions Marketplace.</p>
+            </div>
+            <div class="step">
+                <div class="step-title">4. Run Your First Program</div>
+                <p>Create a file called <code>hello.child</code>:</p>
+                <div class="command-box">say "Hello, World!"</div>
+                <p>Then run it:</p>
+                <div class="command-box">python child.py hello.child</div>
+            </div>
+        </div>
+
+        <h2>Interactive Demos</h2>
+
+        <div class="demo-section">
+            <div class="demo-title">Demo 1: Say Hello</div>
+            <div class="demo-box">
+                <textarea class="demo-input" id="demo1Input">say "Hello, World!"</textarea>
+                <button class="demo-btn" onclick="runDemo('demo1Input','demo1Output')">Run</button>
+                <div>
+                    <b>Output:</b>
+                    <pre class="demo-output" id="demo1Output">// Output will appear here</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <div class="demo-title">Demo 2: Ask for Name</div>
+            <div class="demo-box">
+                <textarea class="demo-input" id="demo2Input">ask "What is your name?" and remember it as name
+say "Hello, "
+say name</textarea>
+                <button class="demo-btn" onclick="runDemo('demo2Input','demo2Output', true)">Run</button>
+                <div>
+                    <b>Output:</b>
+                    <pre class="demo-output" id="demo2Output">// Output will appear here</pre>
+                </div>
+            </div>
+        </div>
+
+        <h2>Resources</h2>
+        <ul>
+            <li><a href="documentation.html">Full Documentation</a></li>
+            <li><a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub Repository</a></li>
+            <li><a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Example Programs</a></li>
+        </ul>
+    </div>
+    <footer style="background:#0a0a14;color:#b3b3b3;text-align:center;padding:40px 20px;">
+        <div class="footer-links" style="display:flex;justify-content:center;gap:30px;margin-bottom:20px;flex-wrap:wrap;">
+            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub</a>
+            <a href="documentation.html">Documentation</a>
+            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
+            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
+        </div>
+        <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
+        <p>Licensed under GPL v3 | Open Source Forever</p>
+    </footer>
+    <script>
+        // Enhanced demo runner for multiple demos and ask simulation
+        function runDemo(inputId, outputId, askMode) {
+            const input = document.getElementById(inputId).value;
+            let output = '';
+            let remembered = {};
+            let lines = input.split('\n');
+            for (let line of lines) {
+                line = line.trim();
+                if (line.startsWith('say ')) {
+                    let match = line.match(/say\s+"([^"]*)"/);
+                    if (match) output += match[1] + '\n';
+                    else if (line.match(/say\s+([a-zA-Z_][a-zA-Z0-9_]*)/)) {
+                        // say variable
+                        let varName = line.match(/say\s+([a-zA-Z_][a-zA-Z0-9_]*)/)[1];
+                        output += (remembered[varName] || '[undefined]') + '\n';
+                    } else output += '[say] ' + line.slice(4) + '\n';
+                } else if (line.startsWith('ask ')) {
+                    let match = line.match(/ask\s+"([^"]*)"\s+and remember it as ([a-zA-Z_][a-zA-Z0-9_]*)/);
+                    if (match && askMode) {
+                        let userInput = prompt(match[1], "Alice");
+                        remembered[match[2]] = userInput || "Alice";
+                        output += '[?] ' + match[1] + '\n';
+                    } else if (match) {
+                        remembered[match[2]] = "Alice";
+                        output += '[?] ' + match[1] + '\n';
+                    } else output += '[ask] ' + line.slice(4) + '\n';
+                } else if (line) {
+                    output += '[not executed in demo] ' + line + '\n';
+                }
+            }
+            document.getElementById(outputId).textContent = output || '// Output will appear here';
+        }
+    </script>
+</body>
+</html>
