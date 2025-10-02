@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHILD - Intuitive Programming for Everyone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #0f0f1e;
+        }
+
+        /* Header/Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="10" y="50" font-size="60" fill="white" opacity="0.03">{}</text></svg>');
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 80px;
+            font-weight: 900;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 28px;
+            margin-bottom: 15px;
+            opacity: 0.95;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.8;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Features Section */
+        .features {
+            background: #1a1a2e;
+            padding: 80px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+            border: 1px solid rgba(79, 172, 254, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(79, 172, 254, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #4facfe;
+        }
+
+        .feature-desc {
+            color: #b3b3b3;
+            line-height: 1.8;
+        }
+
+        /* Code Example Section */
+        .code-example {
+            background: #0f0f1e;
+            padding: 80px 20px;
+            color: white;
+        }
+
+        .code-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            position: relative;
+        }
+
+        .code-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #4facfe;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        pre {
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .keyword { color: #ff6b6b; }
+        .string { color: #4ecdc4; }
+        .number { color: #f7b731; }
+        .comment { color: #666; font-style: italic; }
+
+        /* Installation Section */
+        .installation {
+            background: #16213e;
+            padding: 80px 20px;
+            color: white;
+        }
+
+        .install-steps {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #4facfe;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .step-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .command-box {
+            background: #0f0f1e;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 15px;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0a14;
+            color: #b3b3b3;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #4facfe;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #00f2fe;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 50px;
+            }
+
+            .tagline {
+                font-size: 22px;
+            }
+
+            .code-container {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="logo">CHILD</div>
+            <div class="tagline">Intuitive Programming for Everyone</div>
+            <div class="subtitle">Computational High-level Instruction Language for Dummies</div>
+            <div class="cta-buttons">
+                <a href="https://github.com/RoyalPgYtPc/child-language" class="btn btn-primary">Get Started</a>
+                <a href="https://github.com/RoyalPgYtPc/child-language/blob/main/docs/documentation.md" class="btn btn-secondary">Documentation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose CHILD?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h3 class="feature-title">English-Like Syntax</h3>
+                    <p class="feature-desc">Write code that reads like plain English. No cryptic symbols or confusing syntax.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Beginner Friendly</h3>
+                    <p class="feature-desc">Perfect for anyone intimidated by traditional programming languages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Fast to Learn</h3>
+                    <p class="feature-desc">Start writing programs in minutes, not months.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3 class="feature-title">Full Featured</h3>
+                    <p class="feature-desc">Variables, lists, loops, conditions, and functions - everything you need.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">VS Code Support</h3>
+                    <p class="feature-desc">Syntax highlighting, snippets, and auto-completion included.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🆓</div>
+                    <h3 class="feature-title">Open Source</h3>
+                    <p class="feature-desc">Free forever. Licensed under GPL v3.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Example Section -->
+    <section class="code-example">
+        <div class="container">
+            <h2 class="section-title">See It In Action</h2>
+            <div class="code-container">
+                <div>
+                    <div class="code-block">
+                        <div class="code-title">CHILD</div>
+                        <pre><code><span class="comment">// Simple and readable!</span>
+<span class="keyword">say</span> <span class="string">"Hello, World!"</span>
+
+<span class="keyword">ask</span> <span class="string">"What's your name?"</span> <span class="keyword">and remember it as</span> name
+<span class="keyword">say</span> <span class="string">"Hello, "</span>
+<span class="keyword">say</span> name
+
+<span class="keyword">list</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>] <span class="keyword">as</span> numbers
+
+<span class="keyword">for each item in</span> numbers <span class="keyword">as</span> num
+    <span class="keyword">say</span> num
+<span class="keyword">end</span></code></pre>
+                    </div>
+                </div>
+                <div>
+                    <div class="code-block">
+                        <div class="code-title">Python (Traditional)</div>
+                        <pre><code><span class="comment"># More complex syntax</span>
+<span class="keyword">print</span>(<span class="string">"Hello, World!"</span>)
+
+name = <span class="keyword">input</span>(<span class="string">"What's your name? "</span>)
+<span class="keyword">print</span>(<span class="string">f"Hello, </span>{name}<span class="string">"</span>)
+
+numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]
+
+<span class="keyword">for</span> num <span class="keyword">in</span> numbers:
+    <span class="keyword">print</span>(num)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="installation">
+        <div class="container">
+            <h2 class="section-title">Get Started in 3 Steps</h2>
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Download CHILD
+                    </div>
+                    <p>Clone the repository or download the latest release</p>
+                    <div class="command-box">git clone https://github.com/RoyalPgYtPc/child-language.git</div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Install VS Code Extension
+                    </div>
+                    <p>Get syntax highlighting and auto-completion</p>
+                    <div class="command-box">code --install-extension child-language-1.0.0.vsix</div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Write Your First Program
+                    </div>
+                    <p>Create a .child file and start coding!</p>
+                    <div class="command-box">python child.py myprogram.child</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/RoyalPgYtPc/child-language">GitHub</a>
+            <a href="https://github.com/RoyalPgYtPc/child-language/blob/main/docs/documentation.md">Documentation</a>
+            <a href="https://github.com/RoyalPgYtPc/child-language/blob/main/examples">Examples</a>
+            <a href="https://github.com/RoyalPgYtPc/child-language/issues">Report Issues</a>
+        </div>
+        <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
+        <p>Licensed under GPL v3 | Open Source Forever</p>
+    </footer>
+</body>
+</html>
