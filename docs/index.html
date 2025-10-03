@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <icon rel="icon" href="childicon.png" type="image/x-icon">
+    <link rel="icon" href="childicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHILD - Intuitive Programming for Everyone</title>
     <style>
@@ -11,345 +11,674 @@
             --secondary: #16213e;
             --accent: #f7b731;
             --bg-dark: #0f0f1e;
-            --bg-light: #f7f7fa;
-            --text-dark: #eee;
-            --text-light: #222;
             --card-dark: #1a1a2e;
-            --card-light: #fff;
-            --border-dark: #4facfe33;
-            --border-light: #e0e0e0;
+            --text-light: #e9eef8;
+            --muted: #b3b3b3;
         }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        
         body {
-            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             line-height: 1.7;
-            color: #f3f6fa;
-            background: linear-gradient(135deg, #23234a 0%, #181828 100%);
-            min-height: 100vh;
-            transition: background 0.4s cubic-bezier(.4,0,.2,1), color 0.4s cubic-bezier(.4,0,.2,1);
+            color: var(--text-light);
+            background: var(--bg-dark);
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.4s ease;
         }
-        .light-theme {
-            background: linear-gradient(135deg, #f7f7fa 0%, #e0e0e0 100%);
-            color: #23234a;
+        
+        body.light-theme {
+            background: #f7f7fa;
+            color: #1a1a2e;
+            --bg-dark: #f7f7fa;
+            --card-dark: #fff;
+            --text-light: #1a1a2e;
+            --muted: #666;
         }
-        .hero {
-            background: linear-gradient(120deg, #4facfe 0%, #764ba2 100%);
-            color: #fff;
-            padding: 120px 20px 80px 20px;
-            text-align: center;
-            border-radius: 0 0 48px 48px;
-            box-shadow: 0 8px 32px #0003;
+        
+        /* Neumorphic Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 56px;
+            height: 56px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #1a1a2e;
+            box-shadow: 8px 8px 16px #0a0a14, -8px -8px 16px #2a2a3e;
+        }
+        
+        body.light-theme .theme-toggle {
+            background: #f7f7fa;
+            box-shadow: 8px 8px 16px #d0d0d0, -8px -8px 16px #ffffff;
+        }
+        
+        .theme-toggle:active {
+            box-shadow: inset 4px 4px 8px #0a0a14, inset -4px -4px 8px #2a2a3e;
+        }
+        
+        body.light-theme .theme-toggle:active {
+            box-shadow: inset 4px 4px 8px #d0d0d0, inset -4px -4px 8px #ffffff;
+        }
+        
+        .theme-toggle svg {
+            width: 32px;
+            height: 32px;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .theme-toggle.rotating svg {
+            transform: rotate(360deg);
+        }
+        
+        /* Animated Background */
+        #bgCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+        
+        .wrap {
             position: relative;
-            overflow: visible;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
         }
+        
+        /* Animated Logo */
+        .animated-logo {
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        
+        .animated-logo svg {
+            filter: drop-shadow(0 4px 16px rgba(79, 172, 254, 0.3));
+        }
+        
+        .logo-text {
+            font-size: 72px;
+            font-weight: 900;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(79, 172, 254, 0.4)); }
+            50% { filter: drop-shadow(0 0 16px rgba(79, 172, 254, 0.8)); }
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 100px 20px 60px;
+            text-align: center;
+            border-radius: 0 0 32px 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: heroShimmer 4s ease-in-out infinite;
+        }
+        
+        @keyframes heroShimmer {
+            0%, 100% { opacity: 0.3; transform: translateX(-10%); }
+            50% { opacity: 0.6; transform: translateX(10%); }
+        }
+        
         .hero-content {
             max-width: 900px;
             margin: 0 auto;
             position: relative;
             z-index: 2;
         }
-        .logo.animated-logo {
-            margin-bottom: 18px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .logo.animated-logo svg {
-            filter: drop-shadow(0 4px 24px #4facfe44);
-            background: rgba(255,255,255,0.08);
-            border-radius: 18px;
-            padding: 8px;
-        }
+        
         .tagline {
-            font-size: 2.2em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: 1.5px;
-            color: #fff;
-            text-shadow: 0 2px 12px #23234a44;
+            font-size: 28px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            font-weight: 600;
+            animation: fadeInUp 0.8s ease-out;
         }
+        
         .subtitle {
-            font-size: 1.1em;
-            opacity: 0.85;
-            margin-bottom: 36px;
-            color: #e0e0e0;
+            font-size: 16px;
+            opacity: 0.9;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
         }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Microinteraction Persona Picker */
+        .persona-section {
+            margin: 40px 0;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+        
+        .persona-label {
+            font-size: 18px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        
         .persona-picker {
-            margin: 36px 0 10px 0;
             display: flex;
-            gap: 16px;
-            align-items: center;
+            gap: 12px;
             justify-content: center;
-            font-size: 1.1em;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
         }
+        
         .persona-btn {
-            background: rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.08);
             color: #fff;
-            border: 2px solid #4facfe;
+            border: 2px solid rgba(255,255,255,0.2);
             border-radius: 12px;
-            padding: 10px 22px;
-            font-size: 1em;
+            padding: 12px 24px;
+            font-size: 16px;
             cursor: pointer;
-            font-weight: 500;
-            box-shadow: 0 2px 12px #4facfe22;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        .persona-btn.selected, .persona-btn:focus {
-            background: #4facfe;
-            color: #fff;
-            border-color: #fff;
-            box-shadow: 0 4px 24px #4facfe55;
+        
+        .persona-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
+        
+        .persona-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
         .persona-btn:hover {
-            background: #fff;
-            color: #4facfe;
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        .persona-btn.selected {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             border-color: #fff;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(79, 172, 254, 0.4);
         }
+        
+        .persona-btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
         .persona-reason {
-            min-height: 32px;
-            text-align: center;
-            font-size: 1.15em;
-            color: #f7b731;
-            margin-bottom: 18px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: color 0.3s;
+            min-height: 60px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.5s ease;
+            transform-origin: center;
         }
-        .cta-buttons {
-            margin-top: 18px;
-            gap: 24px;
+        
+        .persona-reason.active {
+            animation: reasonPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        .btn {
-            border-radius: 14px;
-            font-size: 1.1em;
-            padding: 16px 44px;
+        
+        @keyframes reasonPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .reason-title {
+            font-size: 20px;
             font-weight: 700;
-            box-shadow: 0 2px 12px #4facfe22;
-            border: none;
-            background: rgba(255,255,255,0.13);
-            color: #fff;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            color: var(--accent);
+            margin-bottom: 8px;
         }
+        
+        .reason-text {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        /* Hero Use Cases Animation */
+        .hero-uses {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+        }
+        
+        .use-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .use-card:hover {
+            transform: translateY(-8px) rotate(2deg);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.3);
+        }
+        
+        .use-card svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .use-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* CTA Buttons */
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            animation: fadeInUp 0.8s ease-out 0.8s backwards;
+        }
+        
+        .btn {
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::after {
+            width: 400px;
+            height: 400px;
+        }
+        
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
         .btn-primary {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: #fff;
+            border: none;
         }
+        
         .btn-primary:hover {
-            background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
-            color: #fff;
-            box-shadow: 0 4px 24px #00f2fe55;
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(79, 172, 254, 0.4);
         }
+        
         .btn-secondary {
-            background: rgba(255,255,255,0.10);
+            background: transparent;
             color: #fff;
             border: 2px solid #fff;
         }
+        
         .btn-secondary:hover {
             background: #fff;
-            color: #4facfe;
-            border-color: #4facfe;
+            color: #667eea;
         }
-        .hero-uses {
-            display: flex;
-            gap: 32px;
-            justify-content: center;
-            margin-top: 44px;
-            animation: heroUsesFade 1.2s 0.5s both;
-        }
-        .hero-use-card {
-            background: rgba(255,255,255,0.10);
-            color: #fff;
-            border-radius: 18px;
-            padding: 22px 38px;
-            font-size: 1.15em;
-            box-shadow: 0 2px 12px #4facfe22;
-            opacity: 0.96;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
-            transition: transform 0.3s, background 0.3s, color 0.3s;
-        }
-        .hero-use-card:hover {
-            transform: scale(1.09) rotate(-2deg);
-            background: #4facfe;
-            color: #fff;
-        }
-        .isometric-demo {
-            display: flex;
-            justify-content: center;
-            margin-top: 48px;
-            animation: isometricFade 1.2s 0.8s both;
-        }
-        .isometric-group .draw-path {
-            stroke-dasharray: 400;
-            stroke-dashoffset: 400;
-            animation: draw 1.5s cubic-bezier(.77,0,.18,1) forwards;
-        }
-        .features {
-            background: rgba(26,26,46,0.85);
-            padding: 100px 20px 80px 20px;
-            border-radius: 48px;
-            margin: 60px auto 0 auto;
-            box-shadow: 0 8px 32px #0002;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 48px;
-        }
-        .feature-card {
-            background: rgba(255,255,255,0.08);
-            padding: 48px 32px 40px 32px;
-            border-radius: 24px;
-            text-align: center;
-            box-shadow: 0 2px 16px #4facfe22;
-            border: 1.5px solid #4facfe22;
-            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-10px) scale(1.04);
-            box-shadow: 0 8px 32px #4facfe44;
-            background: rgba(79,172,254,0.10);
-            border-color: #4facfe55;
-        }
-        .feature-icon {
-            font-size: 54px;
-            margin-bottom: 24px;
-        }
-        .feature-title {
-            font-size: 1.5em;
-            margin-bottom: 12px;
-            color: #4facfe;
-            font-weight: 700;
-        }
-        .feature-desc {
-            color: #e0e0e0;
-            line-height: 1.8;
-            font-size: 1.08em;
-        }
-        .horizontal-scroll-section {
+        
+        /* Horizontal Scroll Section */
+        .horizontal-scroll {
+            margin: 60px 0;
             overflow-x: auto;
-            background: rgba(35,35,74,0.85);
-            padding: 44px 0 36px 0;
-            border-radius: 32px;
-            margin: 60px auto 0 auto;
-            box-shadow: 0 2px 16px #4facfe22;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
+        
+        .horizontal-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar-track {
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 4px;
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
         .scroll-container {
             display: flex;
-            gap: 56px;
-            min-width: 700px;
+            gap: 24px;
+            padding: 20px 0;
             width: max-content;
-            margin: 0 auto;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 0 32px;
         }
+        
         .scroll-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.15em;
-            color: #fff;
-            background: rgba(255,255,255,0.08);
+            min-width: 200px;
+            padding: 32px;
+            background: var(--card-dark);
             border-radius: 16px;
-            padding: 22px 28px;
-            box-shadow: 0 2px 12px #4facfe22;
-            min-width: 120px;
-            font-weight: 500;
-            transition: transform 0.3s, background 0.3s, color 0.3s;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
         }
+        
         .scroll-item:hover {
-            transform: scale(1.12) rotate(2deg);
-            background: #4facfe;
-            color: #fff;
+            transform: translateY(-8px) scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(79, 172, 254, 0.3);
         }
-        .vertical-scroll-section {
-            background: rgba(24,24,40,0.85);
-            padding: 44px 0 36px 0;
-            border-radius: 32px;
-            margin: 60px auto 0 auto;
-            box-shadow: 0 2px 16px #4facfe22;
+        
+        /* Features Section with Animated SVG Icons */
+        .features {
+            padding: 80px 20px;
+            background: rgba(26,26,46,0.5);
+            border-radius: 24px;
+            margin: 40px 0;
         }
-        .vertical-scroll-container {
+        
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            color: var(--text-light);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: var(--card-dark);
+            padding: 40px 32px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(79,172,254,0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(79,172,254,0.4);
+            box-shadow: 0 16px 48px rgba(79, 172, 254, 0.3);
+        }
+        
+        .feature-card:hover .feature-icon svg path,
+        .feature-card:hover .feature-icon svg circle,
+        .feature-card:hover .feature-icon svg rect {
+            animation: drawPath 1.5s ease-in-out;
+        }
+        
+        .feature-icon {
+            margin-bottom: 24px;
+            height: 80px;
             display: flex;
-            flex-direction: column;
-            gap: 36px;
             align-items: center;
             justify-content: center;
         }
-        .vertical-scroll-item {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            font-size: 1.15em;
-            color: #fff;
-            background: rgba(255,255,255,0.08);
+        
+        .feature-icon svg {
+            width: 64px;
+            height: 64px;
+        }
+        
+        .draw-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawPath 2s ease-in-out forwards;
+        }
+        
+        @keyframes drawPath {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        .feature-title {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .feature-desc {
+            color: var(--muted);
+            line-height: 1.8;
+        }
+        
+        /* Isometric Demo Section */
+        .isometric-section {
+            margin: 60px 0;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .isometric-demo {
+            max-width: 800px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+        
+        .iso-scene {
+            transform-style: preserve-3d;
+            animation: isoFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes isoFloat {
+            0%, 100% { transform: rotateX(15deg) rotateY(-15deg) translateY(0); }
+            50% { transform: rotateX(20deg) rotateY(15deg) translateY(-20px); }
+        }
+        
+        .iso-code-block {
+            background: #1a1a2e;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px;
+            transform: translateZ(40px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        
+        .iso-code-line {
+            font-family: 'Courier New', monospace;
+            color: #4ecdc4;
+            margin: 8px 0;
+            opacity: 0;
+            animation: codeFadeIn 0.5s ease-out forwards;
+        }
+        
+        .iso-code-line:nth-child(1) { animation-delay: 0.2s; }
+        .iso-code-line:nth-child(2) { animation-delay: 0.4s; }
+        .iso-code-line:nth-child(3) { animation-delay: 0.6s; }
+        
+        @keyframes codeFadeIn {
+            to { opacity: 1; transform: translateX(0); }
+            from { opacity: 0; transform: translateX(-20px); }
+        }
+        
+        /* Code Example Section */
+        .code-section {
+            margin: 60px 0;
+            padding: 40px;
+            background: #0b0b12;
             border-radius: 16px;
-            padding: 22px 38px;
-            box-shadow: 0 2px 12px #4facfe22;
-            min-width: 220px;
-            font-weight: 500;
-            transition: transform 0.3s, background 0.3s, color 0.3s;
+            border: 1px solid rgba(79,172,254,0.1);
         }
-        .vertical-scroll-item:hover {
-            transform: scale(1.12) rotate(-2deg);
-            background: #4facfe;
+        
+        .code-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .code-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
             color: #fff;
         }
-        .neumorphic {
-            box-shadow: 6px 6px 16px #0a0a14, -6px -6px 16px #23234a;
-            background: linear-gradient(145deg, #181828 0%, #23234a 100%);
-            border: none;
-            transition: box-shadow 0.3s, background 0.3s;
+        
+        pre {
+            background: #1a1a2e;
+            padding: 30px 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin-top: 10px;
         }
-        .light-theme .neumorphic {
-            box-shadow: 6px 6px 16px #e0e0e0, -6px -6px 16px #fff;
-            background: linear-gradient(145deg, #f7f7fa 0%, #e0e0e0 100%);
+        
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #d9f0ff;
         }
-        .animated-logo svg .draw-path {
-            stroke-dasharray: 400;
-            stroke-dashoffset: 400;
-            animation: draw 1.5s cubic-bezier(.77,0,.18,1) forwards;
-        }
-        @media (max-width: 900px) {
-            .features, .horizontal-scroll-section, .vertical-scroll-section {
-                border-radius: 24px;
-                padding: 60px 8px 40px 8px;
-            }
-            .hero {
-                border-radius: 0 0 24px 24px;
-                padding: 80px 8px 40px 8px;
-            }
-        }
-        @media (max-width: 600px) {
-            .features, .horizontal-scroll-section, .vertical-scroll-section {
-                border-radius: 12px;
-                padding: 32px 2px 20px 2px;
-            }
-            .hero {
-                border-radius: 0 0 12px 12px;
-                padding: 40px 2px 20px 2px;
-            }
-            .features-grid {
-                gap: 18px;
-            }
-        }
-        /* --- Your existing CSS below (unchanged) --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        pre { margin: 0; overflow-x: auto; }
-        code { font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.6; }
-        .keyword { color: #ff6b6b; }
+        
+        .keyword { color: #ff6b6b; font-weight: 700; }
         .string { color: #4ecdc4; }
         .number { color: #f7b731; }
-        .comment { color: #666; font-style: italic; }
+        .comment { color: #6b7280; font-style: italic; }
+        
+        /* Installation Section */
+        .install {
+            margin: 60px 0;
+        }
+        
+        .step {
+            background: var(--card-dark);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+        
+        .step:hover {
+            transform: translateX(8px);
+            box-shadow: -8px 0 16px rgba(79, 172, 254, 0.2);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+        
+        .step-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cmd {
+            background: #0b0b12;
+            padding: 12px;
+            border-radius: 8px;
+            color: var(--muted);
+            font-family: 'Courier New', monospace;
+            margin-top: 12px;
+            overflow-x: auto;
+        }
+        
+        /* Footer */
         footer {
             background: #0a0a14;
-            color: #b3b3b3;
+            color: var(--muted);
             text-align: center;
             padding: 40px 20px;
+            border-radius: 24px 24px 0 0;
+            margin-top: 60px;
         }
+        
+        body.light-theme footer {
+            background: #e0e0e0;
+        }
+        
         .footer-links {
             display: flex;
             justify-content: center;
@@ -357,429 +686,307 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+        
         .footer-links a {
-            color: #4facfe;
+            color: var(--primary);
             text-decoration: none;
             transition: color 0.3s;
         }
-        .footer-links a:hover { color: #00f2fe; }
-        .fade-section {
+        
+        .footer-links a:hover {
+            color: #00f2fe;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo-text { font-size: 48px; }
+            .tagline { font-size: 22px; }
+            .code-container { grid-template-columns: 1fr; }
+            .section-title { font-size: 32px; }
+            .hero { padding: 60px 20px 40px; border-radius: 0 0 20px 20px; }
+            .hero-uses { grid-template-columns: 1fr; }
+        }
+        
+        /* Fade in animations */
+        .fade-in {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s cubic-bezier(.4,0,.2,1), transform 1s cubic-bezier(.4,0,.2,1);
+            transform: translateY(20px);
+            transition: opacity 0.6s, transform 0.6s;
         }
-        .fade-section.visible {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-        .animated-icon {
-            width: 48px; height: 48px; display: inline-block; vertical-align: middle;
-        }
-        .draw-path {
-            stroke-dasharray: 400;
-            stroke-dashoffset: 400;
-            animation: draw 2s cubic-bezier(.77,0,.18,1) forwards;
-        }
-        @keyframes draw {
-            to { stroke-dashoffset: 0; }
-        }
-        /* Ambient background motion */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -200px; left: -200px; right: -200px; bottom: -200px;
-            z-index: 0;
-            pointer-events: none;
-            background:
-                radial-gradient(circle at 20% 30%, #4facfe99 0, transparent 60%),
-                radial-gradient(circle at 80% 70%, #764ba299 0, transparent 60%),
-                radial-gradient(circle at 60% 10%, #f7b73177 0, transparent 70%),
-                linear-gradient(120deg, #4facfe22 0%, #764ba222 100%);
-            animation: bgmove 12s ease-in-out infinite alternate;
-            opacity: 0.7;
-        }
-        @keyframes bgmove {
-            0% { filter: blur(0px) brightness(1); }
-            50% { filter: blur(20px) brightness(1.08); }
-            100% { filter: blur(40px) brightness(1.15); }
-        }
-        /* Feature card SVG animation */
-        .feature-card .animated-icon svg {
-            width: 48px; height: 48px;
-            display: inline-block;
-        }
-        .feature-card .draw-path {
-            stroke-dasharray: 400;
-            stroke-dashoffset: 400;
-            animation: draw 1.2s cubic-bezier(.77,0,.18,1) forwards;
-        }
-        .feature-card:hover .draw-path {
-            animation: draw 0.7s cubic-bezier(.77,0,.18,1) forwards;
-            stroke: #f7b731;
-        }
-        @keyframes draw {
-            to { stroke-dashoffset: 0; }
-        }
-        /* Theme toggle SVG animation */
-        .theme-toggle {
-            background: none;
-            border: none;
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 100;
-            cursor: pointer;
-            padding: 0;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .theme-toggle svg {
-            width: 40px;
-            height: 40px;
-            transition: transform 0.5s cubic-bezier(.4,0,.2,1);
-        }
-        .theme-toggle.sun svg {
-            transform: rotate(180deg) scale(1.1);
-        }
-        .theme-toggle.moon svg {
-            transform: rotate(0deg) scale(1);
-        }
-        /* Microinteractions: ripple effect */
-        .btn { position: relative; overflow: hidden; }
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            background: rgba(79,172,254,0.25);
-            pointer-events: none;
-        }
-        @keyframes ripple {
-            to { transform: scale(2.5); opacity: 0; }
-        }
-        /* --- Your existing CSS above (unchanged) --- */
-    </style>
-    <!-- Overrides for visual polish and improved animation behavior -->
-    <style id="overrides">
-        /* Tone down ambient background and motion */
-        body::before { opacity: 0.28 !important; filter: blur(10px) brightness(1.02) !important; }
-
-        /* Simplify hero and spacing */
-        .hero { padding: 80px 18px 60px 18px !important; border-radius: 0 0 28px 28px !important; box-shadow: 0 6px 20px rgba(0,0,0,0.34) !important; }
-        .hero .tagline { font-size: 1.9em !important; }
-        .logo.animated-logo svg { width: 88px; height: auto; }
-
-        /* Softer feature cards */
-        .feature-card { padding: 34px 24px !important; border-radius: 18px !important; border: 1px solid rgba(79,172,254,0.06) !important; background: rgba(255,255,255,0.03) !important; }
-        .feature-card:hover { transform: translateY(-8px) scale(1.03) !important; }
-
-        /* Reduce heavy shadows across components */
-        .hero-use-card, .feature-card, .scroll-item, .vertical-scroll-item { box-shadow: 0 6px 18px rgba(6,12,30,0.45) !important; }
-
-        /* Make drawing subtler and consistent */
-        .draw-path { animation-duration: 1.2s !important; animation-timing-function: cubic-bezier(.77,0,.18,1) !important; animation-fill-mode: forwards !important; stroke-linecap: round !important; stroke-linejoin: round !important; }
-
-        /* Compact persona picker */
-        .persona-picker span { opacity: .9; margin-right: 8px; color: rgba(255,255,255,0.95); }
-        .persona-btn { padding: 8px 14px !important; border-radius: 10px !important; font-size: .95em !important; }
-        .persona-reason { font-size: 1.02em !important; margin-bottom: 12px !important; }
-
-        /* Tame horizontal/vertical sections spacing */
-        .features, .horizontal-scroll-section, .vertical-scroll-section { margin-top: 40px !important; padding: 48px 12px !important; }
-
-        /* Neumorphic toggle tweaks */
-        .theme-toggle { right: 18px !important; top: 18px !important; width: 46px !important; height: 46px !important; border-radius: 12px !important; }
-        .neumorphic { transition: box-shadow .35s ease, transform .18s ease !important; }
-        .theme-toggle:active { transform: translateY(1px) scale(.99) !important; }
-
-        /* Respect reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            * { animation: none !important; transition: none !important; }
-            .draw-path { stroke-dashoffset: 0 !important; }
-        }
-
-        /* Small-screen tweaks */
-        @media (max-width: 620px) {
-            .hero { padding: 40px 12px 28px 12px !important; }
-            .hero .tagline { font-size: 1.6em !important; }
-            .cta-buttons { gap: 12px !important; }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
-
-    <style id="simplify">
-        /* Restore simpler base look and remove noisy visual artifacts */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
-            color: var(--text-dark);
-            background: var(--bg-dark) !important;
-        }
-        /* Remove overbearing ambient background so visuals are calm */
-        body::before { display: none !important; }
-
-        /* Simpler hero: less rounded, less shadow, tighter spacing */
-        .hero { border-radius: 0 !important; box-shadow: none !important; padding: 72px 18px 48px 18px !important; }
-        .hero .tagline { font-size: 1.6em !important; }
-        .logo.animated-logo svg { width: 80px !important; height: auto !important; padding: 0 !important; background: transparent !important; filter: none !important; }
-
-        /* Feature cards: go back to solid dark cards with modest radius */
-        .features { background: #1a1a2e !important; border-radius: 12px !important; margin-top: 36px !important; padding: 64px 12px 48px 12px !important; }
-        .feature-card { background: #16213e !important; border-radius: 12px !important; padding: 28px 20px !important; box-shadow: none !important; border: 1px solid rgba(79,172,254,0.06) !important; }
-        .feature-title { color: #4facfe !important; }
-        .feature-desc { color: #cfcfcf !important; }
-
-        /* Subtler buttons */
-        .btn { box-shadow: none !important; }
-        .btn-primary { background: linear-gradient(90deg,#4facfe,#2d9ef5) !important; }
-        .btn-secondary { background: transparent !important; border-color: rgba(255,255,255,0.12) !important; }
-
-        /* Tone down card and container shadows */
-        .hero-use-card, .scroll-item, .vertical-scroll-item { box-shadow: none !important; background: rgba(255,255,255,0.03) !important; }
-
-        /* Restore original small SVG sizes for icons */
-        .feature-icon svg, .animated-icon { width: 48px !important; height: 48px !important; }
-
-        /* Isometric demo: enable 3D transform and a gentle looping tilt to show depth */
-        .isometric-demo svg { width: 260px; height: auto; display: block; margin: 14px auto 0 auto; }
-        .isometric-group { transform-style: preserve-3d; perspective: 800px; }
-        .isometric-group.animate { animation: isoFlow 4s ease-in-out infinite; transform-origin: 50% 50%; }
-        @keyframes isoFlow {
-            0% { transform: rotateX(28deg) rotateY(-12deg) translateY(6px) translateZ(0); }
-            50% { transform: rotateX(8deg) rotateY(10deg) translateY(-8px) translateZ(6px); }
-            100% { transform: rotateX(28deg) rotateY(-12deg) translateY(6px) translateZ(0); }
-        }
-
-        /* Make polyline draw a bit quicker and smoother */
-        .isometric-group .draw-path { stroke-linecap: round; stroke-linejoin: round; animation-duration: 1s !important; }
-
-        /* Keep reduced motion in mind */
-        @media (prefers-reduced-motion: reduce) { .isometric-group.animate, .isometric-group .draw-path { animation: none !important; } }
-    </style>
-
-    <script id="overrides-js">
-    (function(){
-        // Use IntersectionObserver to trigger each draw-path once (clean, no repeated resets)
-        const paths = Array.from(document.querySelectorAll('.draw-path'));
-        if(paths.length === 0) return;
-
-        function triggerPath(p) {
-            try {
-                p.style.animation = 'none';
-                // force reflow
-                void p.getBoundingClientRect();
-                p.style.animation = '';
-                // If stroke-dasharray not set, compute and set for smoother draw
-                if(!p.getAttribute('data-dash')){
-                    const length = (p.getTotalLength && typeof p.getTotalLength === 'function') ? Math.ceil(p.getTotalLength()) : 400;
-                    p.style.strokeDasharray = length;
-                    p.style.strokeDashoffset = length;
-                    p.setAttribute('data-dash', length);
-                }
-            } catch (e) { /* svg may not support getTotalLength for some elements; ignore */ }
-        }
-
-        if('IntersectionObserver' in window) {
-            const obs = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if(entry.isIntersecting) {
-                        triggerPath(entry.target);
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.35 });
-            paths.forEach(p => obs.observe(p));
-        } else {
-            // fallback: trigger all on load
-            window.addEventListener('load', () => paths.forEach(triggerPath));
-        }
-
-        // Set reasonable default persona (student) for friendly first impression
-        const defaultPersona = document.querySelector('.persona-btn[data-persona="student"]');
-        if(defaultPersona && !document.querySelector('.persona-btn.selected')) {
-            defaultPersona.classList.add('selected');
-            const evt = new Event('click');
-            defaultPersona.dispatchEvent(evt);
-        }
-
-        // Apply small neumorphic shadow after theme changes to feel tactile
-        const themeToggle = document.getElementById('themeToggle');
-        function applyToggleShadow(theme) {
-            if(!themeToggle) return;
-            if(theme === 'light') themeToggle.style.boxShadow = 'inset 4px 4px 10px rgba(255,255,255,0.45), inset -4px -4px 10px rgba(0,0,0,0.04)';
-            else themeToggle.style.boxShadow = '6px 6px 14px rgba(0,0,0,0.55), -6px -6px 12px rgba(70,80,140,0.04)';
-        }
-        // initial
-        const stored = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        applyToggleShadow(stored);
-        // when theme toggles (listen globally)
-        const origToggle = window.toggleTheme;
-        if(typeof origToggle === 'function') {
-            window.toggleTheme = function(){ origToggle(); setTimeout(()=>applyToggleShadow(document.body.classList.contains('light-theme')? 'light':'dark'), 260); };
-        }
-    })();
-    </script>
 </head>
 <body>
-        <button class="theme-toggle moon neumorphic" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
-            <svg id="themeIcon" viewBox="0 0 40 40" fill="none" stroke="#4facfe" stroke-width="2.5">
-                <circle id="sun" cx="20" cy="20" r="10" fill="#f7b731" stroke="#f7b731" opacity="0.7"/>
-                <path id="moon" d="M28 20a8 8 0 1 1-8-8c0 4.418 3.582 8 8 8z" fill="#16213e" stroke="#4facfe"/>
-                <g id="rays">
-                    <line x1="20" y1="2" x2="20" y2="8" stroke="#f7b731"/>
-                    <line x1="20" y1="32" x2="20" y2="38" stroke="#f7b731"/>
-                    <line x1="2" y1="20" x2="8" y2="20" stroke="#f7b731"/>
-                    <line x1="32" y1="20" x2="38" y2="20" stroke="#f7b731"/>
-                    <line x1="7.8" y1="7.8" x2="12.2" y2="12.2" stroke="#f7b731"/>
-                    <line x1="27.8" y1="27.8" x2="32.2" y2="32.2" stroke="#f7b731"/>
-                    <line x1="7.8" y1="32.2" x2="12.2" y2="27.8" stroke="#f7b731"/>
-                    <line x1="27.8" y1="12.2" x2="32.2" y2="7.8" stroke="#f7b731"/>
-                </g>
-            </svg>
-        </button>
-    <!-- Hero Section with animated logo and persona picker -->
-    <section class="hero hero-animated">
-        <div class="hero-content">
-            <div class="logo animated-logo">
-                <svg viewBox="0 0 120 60" width="120" height="60">
-                    <g>
-                        <image href="Logo.svg" x="0" y="0" width="60" height="60"/>
-                        <rect class="draw-path" x="65" y="10" width="50" height="40" rx="10" stroke="#4facfe" stroke-width="3" fill="none"/>
-                        <text x="90" y="40" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial" fill="#4facfe" opacity="0.8">CHILD</text>
-                    </g>
-                </svg>
+    <canvas id="bgCanvas"></canvas>
+    
+    <!-- Neumorphic Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg id="themeIcon" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="5" fill="#f7b731" stroke="#f7b731" stroke-width="2">
+                <animate attributeName="r" values="5;6;5" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <g id="rays" stroke="#f7b731" stroke-width="2" stroke-linecap="round">
+                <line x1="16" y1="4" x2="16" y2="8"/>
+                <line x1="16" y1="24" x2="16" y2="28"/>
+                <line x1="4" y1="16" x2="8" y2="16"/>
+                <line x1="24" y1="16" x2="28" y2="16"/>
+                <line x1="7" y1="7" x2="10" y2="10"/>
+                <line x1="22" y1="22" x2="25" y2="25"/>
+                <line x1="7" y1="25" x2="10" y2="22"/>
+                <line x1="22" y1="10" x2="25" y2="7"/>
+            </g>
+        </svg>
+    </button>
+    
+    <div class="wrap">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="animated-logo">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4facfe"/>
+                                <stop offset="100%" style="stop-color:#00f2fe"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="draw-path" cx="60" cy="60" r="50" fill="none" stroke="url(#logoGrad)" stroke-width="4"/>
+                        <path class="draw-path" d="M40 50 L50 40 L70 40 L80 50 L80 70 L70 80 L50 80 L40 70 Z" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
+                        <text x="60" y="70" text-anchor="middle" font-size="32" font-weight="900" fill="url(#logoGrad)">C</text>
+                    </svg>
+                </div>
+                <div class="logo-text">CHILD</div>
+                <div class="tagline">Intuitive Programming for Everyone</div>
+                <div class="subtitle">Computational High-level Instruction Language for Dummies</div>
+                
+                <!-- Microinteraction Persona Picker -->
+                <div class="persona-section">
+                    <div class="persona-label">I'm a:</div>
+                    <div class="persona-picker">
+                        <button class="persona-btn" data-persona="student"><span>Student</span></button>
+                        <button class="persona-btn" data-persona="professional"><span>Professional</span></button>
+                        <button class="persona-btn" data-persona="educator"><span>Educator</span></button>
+                        <button class="persona-btn" data-persona="hobbyist"><span>Hobbyist</span></button>
+                    </div>
+                    <div class="persona-reason" id="personaReason">
+                        <div class="reason-title"></div>
+                        <div class="reason-text"></div>
+                    </div>
+                </div>
+                
+                <!-- Hero Use Cases -->
+                <div class="hero-uses">
+                    <div class="use-card">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.5">
+                            <path class="draw-path" d="M8 12h32v24H8z"/>
+                            <path class="draw-path" d="M16 20h16M16 28h12"/>
+                        </svg>
+                        <h4>Learn Visually</h4>
+                    </div>
+                    <div class="use-card">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.5">
+                            <circle class="draw-path" cx="24" cy="24" r="16"/>
+                            <path class="draw-path" d="M24 16v8l6 6"/>
+                        </svg>
+                        <h4>Automate Tasks</h4>
+                    </div>
+                    <div class="use-card">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.5">
+                            <path class="draw-path" d="M12 20h24M12 28h16"/>
+                            <circle class="draw-path" cx="24" cy="12" r="4"/>
+                        </svg>
+                        <h4>Teach Concepts</h4>
+                    </div>
+                    <div class="use-card">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.5">
+                            <path class="draw-path" d="M24 8c8.8 0 16 7.2 16 16s-7.2 16-16 16-16-7.2-16-16S15.2 8 24 8z"/>
+                            <path class="draw-path" d="M16 24h16M24 16v16"/>
+                        </svg>
+                        <h4>Build Projects</h4>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons">
+                    <a href="get-started.html" class="btn btn-primary"><span>Get Started</span></a>
+                    <a href="documentation.html" class="btn btn-secondary"><span>Documentation</span></a>
+                </div>
             </div>
-            <div class="tagline">Intuitive Programming for Everyone</div>
-            <div class="subtitle">Computational High-level Instruction Language for Dummies</div>
-            <div class="persona-picker">
-                <span>I'm a:</span>
-                <button class="persona-btn" data-persona="student">Student</button>
-                <button class="persona-btn" data-persona="professional">Professional</button>
-                <button class="persona-btn" data-persona="educator">Educator</button>
-                <button class="persona-btn" data-persona="hobbyist">Hobbyist</button>
+        </section>
+        
+        <!-- Horizontal Scroll Section -->
+        <section class="horizontal-scroll fade-in">
+            <h2 class="section-title">Language Features Flow</h2>
+            <div class="scroll-container">
+                <div class="scroll-item">
+                    <svg viewBox="0 0 64 64" fill="none" stroke="var(--primary)" stroke-width="3">
+                        <path class="draw-path" d="M16 24h32M16 32h24M16 40h28"/>
+                    </svg>
+                    <h4>Variables</h4>
+                    <p>Store & reuse data</p>
+                </div>
+                <div class="scroll-item">
+                    <svg viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="3">
+                        <rect class="draw-path" x="12" y="16" width="40" height="32" rx="4"/>
+                        <line class="draw-path" x1="20" y1="24" x2="44" y2="24"/>
+                        <line class="draw-path" x1="20" y1="32" x2="44" y2="32"/>
+                        <line class="draw-path" x1="20" y1="40" x2="36" y2="40"/>
+                    </svg>
+                    <h4>Lists</h4>
+                    <p>Organize collections</p>
+                </div>
+                <div class="scroll-item">
+                    <svg viewBox="0 0 64 64" fill="none" stroke="#4ecdc4" stroke-width="3">
+                        <circle class="draw-path" cx="32" cy="32" r="20"/>
+                        <path class="draw-path" d="M32 22v10l8 8"/>
+                    </svg>
+                    <h4>Loops</h4>
+                    <p>Repeat actions</p>
+                </div>
+                <div class="scroll-item">
+                    <svg viewBox="0 0 64 64" fill="none" stroke="#ff6b6b" stroke-width="3">
+                        <path class="draw-path" d="M32 12L20 32h24L32 52"/>
+                    </svg>
+                    <h4>Conditions</h4>
+                    <p>Make decisions</p>
+                </div>
+                <div class="scroll-item">
+                    <svg viewBox="0 0 64 64" fill="none" stroke="#764ba2" stroke-width="3">
+                        <rect class="draw-path" x="16" y="20" width="32" height="24" rx="4"/>
+                        <circle class="draw-path" cx="32" cy="32" r="6"/>
+                    </svg>
+                    <h4>Functions</h4>
+                    <p>Reusable code blocks</p>
+                </div>
             </div>
-            <div class="persona-reason" id="personaReason"></div>
-            <div class="cta-buttons">
-                <a href="get-started.html" class="btn btn-primary">Get Started</a>
-                <a href="documentation.html" class="btn btn-secondary">Documentation</a>
-            </div>
-        </div>
-        <div class="hero-uses">
-            <div class="hero-use-card">👩‍💻 <span>Learn to code visually</span></div>
-            <div class="hero-use-card">🤖 <span>Automate tasks easily</span></div>
-            <div class="hero-use-card">🎓 <span>Teach programming concepts</span></div>
-            <div class="hero-use-card">🌍 <span>Accessible for everyone</span></div>
-        </div>
-        <div class="isometric-demo">
-            <svg viewBox="0 0 200 120" width="200" height="120">
-                <g class="isometric-group">
-                    <rect x="30" y="60" width="140" height="40" rx="8" fill="#1a1a2e" stroke="#4facfe" stroke-width="2"/>
-                    <rect x="40" y="70" width="120" height="20" rx="4" fill="#222" stroke="#f7b731" stroke-width="1.5"/>
-                    <text x="100" y="85" text-anchor="middle" font-size="14" fill="#fff">say "Hello, World!"</text>
-                    <polyline class="draw-path" points="40,70 100,40 160,70" stroke="#4ecdc4" stroke-width="3" fill="none"/>
-                    <rect class="draw-path" x="90" y="30" width="20" height="10" rx="2" stroke="#ff6b6b" stroke-width="2" fill="none"/>
-                </g>
-            </svg>
-        </div>
-    </section>
-    <!-- Horizontal Scroll Animation Section -->
-    <section class="horizontal-scroll-section fade-section">
-        <div class="scroll-container">
-            <div class="scroll-item"><svg width="48" height="48" viewBox="0 0 48 48"><circle class="draw-path" cx="24" cy="24" r="20" stroke="#4facfe" stroke-width="3" fill="none"/></svg><span>Visualize</span></div>
-            <div class="scroll-item"><svg width="48" height="48" viewBox="0 0 48 48"><rect class="draw-path" x="8" y="8" width="32" height="32" rx="8" stroke="#f7b731" stroke-width="3" fill="none"/></svg><span>Code</span></div>
-            <div class="scroll-item"><svg width="48" height="48" viewBox="0 0 48 48"><polygon class="draw-path" points="24,4 44,44 4,44" stroke="#ff6b6b" stroke-width="3" fill="none"/></svg><span>Learn</span></div>
-            <div class="scroll-item"><svg width="48" height="48" viewBox="0 0 48 48"><ellipse class="draw-path" cx="24" cy="24" rx="18" ry="10" stroke="#764ba2" stroke-width="3" fill="none"/></svg><span>Share</span></div>
-        </div>
-    </section>
-    <!-- Vertical Scroll Animation Section -->
-    <section class="vertical-scroll-section fade-section">
-        <div class="vertical-scroll-container">
-            <div class="vertical-scroll-item"><svg width="40" height="40" viewBox="0 0 40 40"><rect class="draw-path" x="8" y="8" width="24" height="24" rx="6" stroke="#4facfe" stroke-width="2.5" fill="none"/></svg><span>Step 1: Write</span></div>
-            <div class="vertical-scroll-item"><svg width="40" height="40" viewBox="0 0 40 40"><circle class="draw-path" cx="20" cy="20" r="12" stroke="#f7b731" stroke-width="2.5" fill="none"/></svg><span>Step 2: Run</span></div>
-            <div class="vertical-scroll-item"><svg width="40" height="40" viewBox="0 0 40 40"><polygon class="draw-path" points="20,6 34,34 6,34" stroke="#ff6b6b" stroke-width="2.5" fill="none"/></svg><span>Step 3: See Output</span></div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features fade-section">
-        <div class="container">
+        </section>
+        
+        <!-- Features Section with Animated SVG Icons -->
+        <section class="features fade-in">
             <h2 class="section-title">Why Choose CHILD?</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg class="animated-icon" viewBox="0 0 48 48" fill="none" stroke="#4facfe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <rect class="draw-path" x="8" y="12" width="32" height="24" rx="4"/>
-                            <path class="draw-path" d="M16 20h16M16 28h8"/>
+                        <svg viewBox="0 0 64 64" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round">
+                            <rect class="draw-path" x="12" y="16" width="40" height="32" rx="4"/>
+                            <path class="draw-path" d="M20 26h24M20 34h16M20 42h20"/>
                         </svg>
                     </div>
                     <h3 class="feature-title">English-Like Syntax</h3>
                     <p class="feature-desc">Write code that reads like plain English. No cryptic symbols or confusing syntax.</p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg class="animated-icon" viewBox="0 0 48 48" fill="none" stroke="#f7b731" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <circle class="draw-path" cx="24" cy="24" r="16"/>
-                            <circle class="draw-path" cx="24" cy="24" r="8"/>
-                            <circle class="draw-path" cx="24" cy="24" r="2"/>
+                        <svg viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round">
+                            <circle class="draw-path" cx="32" cy="32" r="20"/>
+                            <circle class="draw-path" cx="32" cy="32" r="12"/>
+                            <circle class="draw-path" cx="32" cy="32" r="4"/>
                         </svg>
                     </div>
                     <h3 class="feature-title">Beginner Friendly</h3>
                     <p class="feature-desc">Perfect for anyone intimidated by traditional programming languages.</p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg class="animated-icon" viewBox="0 0 48 48" fill="none" stroke="#4ecdc4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline class="draw-path" points="24 4 12 28 26 28 20 44 36 20 22 20 28 4"/>
+                        <svg viewBox="0 0 64 64" fill="none" stroke="#4ecdc4" stroke-width="2.5" stroke-linecap="round">
+                            <path class="draw-path" d="M32 12L20 28h8v16h8V28h8z"/>
+                            <line class="draw-path" x1="16" y1="52" x2="48" y2="52"/>
                         </svg>
                     </div>
                     <h3 class="feature-title">Fast to Learn</h3>
                     <p class="feature-desc">Start writing programs in minutes, not months.</p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg class="animated-icon" viewBox="0 0 48 48" fill="none" stroke="#ff6b6b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <path class="draw-path" d="M38 38l-8-8M30 30l-8-8M20 20l-8-8M24 44a20 20 0 1 1 0-40 20 20 0 0 1 0 40z"/>
+                        <svg viewBox="0 0 64 64" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round">
+                            <path class="draw-path" d="M32 8c13.3 0 24 10.7 24 24s-10.7 24-24 24S8 45.3 8 32 18.7 8 32 8z"/>
+                            <path class="draw-path" d="M24 28l8 8 16-16"/>
                         </svg>
                     </div>
                     <h3 class="feature-title">Full Featured</h3>
                     <p class="feature-desc">Variables, lists, loops, conditions, and functions - everything you need.</p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg class="animated-icon" viewBox="0 0 48 48" fill="none" stroke="#764ba2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <ellipse class="draw-path" cx="24" cy="24" rx="18" ry="10"/>
-                            <circle class="draw-path" cx="16" cy="24" r="2"/>
-                            <circle class="draw-path" cx="24" cy="24" r="2"/>
-                            <circle class="draw-path" cx="32" cy="24" r="2"/>
+                        <svg viewBox="0 0 64 64" fill="none" stroke="#764ba2" stroke-width="2.5" stroke-linecap="round">
+                            <rect class="draw-path" x="12" y="12" width="40" height="40" rx="4"/>
+                            <path class="draw-path" d="M20 28h8M20 36h12M20 44h10"/>
+                            <circle class="draw-path" cx="44" cy="20" r="3"/>
                         </svg>
                     </div>
                     <h3 class="feature-title">VS Code Support</h3>
-                    <p class="feature-desc">Syntax highlighting, snippets, and auto-completion included. The extension comes with a built-in interpreter!</p>
+                    <p class="feature-desc">Syntax highlighting, snippets, and auto-completion included.</p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg class="animated-icon" viewBox="0 0 48 48" fill="none" stroke="#00f2fe" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <path class="draw-path" d="M8 24c0-8.837 7.163-16 16-16s16 7.163 16 16-7.163 16-16 16S8 32.837 8 24z"/>
-                            <path class="draw-path" d="M24 16v8l6 6"/>
+                        <svg viewBox="0 0 64 64" fill="none" stroke="#00f2fe" stroke-width="2.5" stroke-linecap="round">
+                            <path class="draw-path" d="M32 8c13.3 0 24 10.7 24 24s-10.7 24-24 24S8 45.3 8 32 18.7 8 32 8z"/>
+                            <path class="draw-path" d="M32 20v12l8 8"/>
                         </svg>
                     </div>
                     <h3 class="feature-title">Open Source</h3>
                     <p class="feature-desc">Free forever. Licensed under GPL v3.</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Code Example Section -->
-    <section class="code-example fade-section">
-        <div class="container">
+        </section>
+        
+        <!-- Isometric Demo Section -->
+        <section class="isometric-section fade-in">
+            <h2 class="section-title">See CHILD in Action</h2>
+            <div class="isometric-demo">
+                <svg viewBox="0 0 600 400" style="width: 100%; height: auto;">
+                    <defs>
+                        <linearGradient id="isoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4facfe"/>
+                            <stop offset="100%" style="stop-color:#00f2fe"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <g class="iso-scene">
+                        <!-- Base platform -->
+                        <polygon points="150,250 300,180 450,250 300,320" fill="rgba(79,172,254,0.1)" stroke="var(--primary)" stroke-width="2"/>
+                        
+                        <!-- Code block 1 -->
+                        <g transform="translate(0, -20)">
+                            <polygon class="draw-path" points="180,200 250,160 320,200 250,240" fill="#1a1a2e" stroke="var(--primary)" stroke-width="2"/>
+                            <text x="250" y="205" text-anchor="middle" font-size="12" fill="var(--primary)">say "Hello"</text>
+                        </g>
+                        
+                        <!-- Code block 2 -->
+                        <g transform="translate(100, 0)">
+                            <polygon class="draw-path" points="280,220 350,180 420,220 350,260" fill="#1a1a2e" stroke="var(--accent)" stroke-width="2"/>
+                            <text x="350" y="225" text-anchor="middle" font-size="12" fill="var(--accent)">list [1,2,3]</text>
+                        </g>
+                        
+                        <!-- Connecting lines -->
+                        <path class="draw-path" d="M250 240 L350 260" stroke="url(#isoGrad)" stroke-width="2" stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" from="0" to="20" dur="1s" repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Floating data point -->
+                        <circle cx="300" cy="280" r="6" fill="var(--accent)">
+                            <animate attributeName="cy" values="280;260;280" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                    </g>
+                </svg>
+            </div>
+        </section>
+        
+        <!-- Code Example Section -->
+        <section class="code-section fade-in">
             <h2 class="section-title">See It In Action</h2>
             <div class="code-container">
-                <div>
-                    <div class="code-block">
-                        <div class="code-title">CHILD</div>
-                        <pre><code><span class="comment">// Simple and readable!</span>
+                <div class="code-block">
+                    <div class="code-title">CHILD</div>
+                    <pre><code><span class="comment">// Simple and readable!</span>
 <span class="keyword">say</span> <span class="string">"Hello, World!"</span>
 
 <span class="keyword">ask</span> <span class="string">"What's your name?"</span> <span class="keyword">and remember it as</span> name
@@ -791,12 +998,11 @@
 <span class="keyword">for each item in</span> numbers <span class="keyword">as</span> num
     <span class="keyword">say</span> num
 <span class="keyword">end</span></code></pre>
-                    </div>
                 </div>
-                <div>
-                    <div class="code-block">
-                        <div class="code-title">Python (Traditional)</div>
-                        <pre><code><span class="comment"># More complex syntax</span>
+                
+                <div class="code-block">
+                    <div class="code-title">Python (Traditional)</div>
+                    <pre><code><span class="comment"># More complex syntax</span>
 <span class="keyword">print</span>(<span class="string">"Hello, World!"</span>)
 
 name = <span class="keyword">input</span>(<span class="string">"What's your name? "</span>)
@@ -806,223 +1012,201 @@ numbers = [<span class="number">1</span>, <span class="number">2</span>, <span c
 
 <span class="keyword">for</span> num <span class="keyword">in</span> numbers:
     <span class="keyword">print</span>(num)</code></pre>
-                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Installation Section -->
-    <section class="installation fade-section">
-        <div class="container">
+        </section>
+        
+        <!-- Installation Section -->
+        <section class="install fade-in">
             <h2 class="section-title">Get Started in 3 Steps</h2>
-            <div class="install-steps">
-                <div class="step">
-                    <div class="step-title">
-                        <span class="step-number">1</span>
-                        Download CHILD
-                    </div>
-                    <p>Clone the repository or download the latest release:</p>
-                    <div class="command-box">git clone https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies.git</div>
+            
+            <div class="step">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    Download CHILD
                 </div>
-                <div class="step">
-                    <div class="step-title">
-                        <span class="step-number">2</span>
-                        Install the VS Code Extension
-                    </div>
-                    <ol>
-                        <li>Find <code>CHILD-Computational-High-level-Instruction-Language-for-Dummies-1.0.0.vsix</code> in the repo (main folder or releases).</li>
-                        <li>Open VS Code, press <b>Ctrl+Shift+P</b> and select <b>Extensions: Install from VSIX...</b></li>
-                        <li>Choose the <code>.vsix</code> file you downloaded.</li>
-                    </ol>
-                    <p><b>Note:</b> The extension includes a built-in interpreter. You only need to install it <u>once</u>!</p>
-                </div>
-                <div class="step">
-                    <div class="step-title">
-                        <span class="step-number">3</span>
-                        Write & Run Your First Program
-                    </div>
-                    <p>
-                        <b>In VS Code:</b> Open your <code>.child</code> file and click <b>Run</b> (▶️) or right-click and choose <b>Run CHILD File</b>.<br>
-                        <b>Without VS Code?</b> Use the standalone interpreter (<code>child.py</code>, also in the repo):
-                    </p>
-                    <div class="command-box">python child.py myprogram.child</div>
-                </div>
+                <p>Clone the repository or download the latest release</p>
+                <div class="cmd">git clone https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies.git</div>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-links">
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub</a>
-            <a href="documentation.html">Documentation</a>
-            <a href="get-started.html">Get Started</a>
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
-        </div>
-        <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
-        <p>Licensed under GPL v3 | Open Source Forever</p>
-    </footer>
+            <h1 align="center">OR</h1>
+            <div class="step">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    Install VS Code Extension
+                </div>
+                <p>Get syntax highlighting and auto-completion</p>
+                <div class="cmd">code --install-extension child-language-1.0.0.vsix</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    Write Your First Program
+                </div>
+                <p>Create a .child file and start coding!</p>
+                <div class="cmd">python child.py myprogram.child</div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-links">
+                <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub</a>
+                <a href="documentation.html">Documentation</a>
+                <a href="get-started.html">Get Started</a>
+                <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
+                <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
+            </div>
+            <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
+            <p>Licensed under GPL v3 | Open Source Forever</p>
+        </footer>
+    </div>
+    
     <script>
-        function setTheme(theme) {
-            const btn = document.getElementById('themeToggle');
-            const icon = document.getElementById('themeIcon');
-            if(theme === "light") {
-                document.body.classList.add("light-theme");
-                btn.classList.remove('moon');
-                btn.classList.add('sun');
-                icon.querySelector('#sun').setAttribute('opacity', '1');
-                icon.querySelector('#moon').setAttribute('opacity', '0');
-                icon.querySelector('#rays').setAttribute('opacity', '1');
-            } else {
-                document.body.classList.remove("light-theme");
-                btn.classList.remove('sun');
-                btn.classList.add('moon');
-                icon.querySelector('#sun').setAttribute('opacity', '0.7');
-                icon.querySelector('#moon').setAttribute('opacity', '1');
-                icon.querySelector('#rays').setAttribute('opacity', '0.5');
-            }
-            localStorage.setItem("theme", theme);
-        }
-        function toggleTheme() {
-            if(document.body.classList.contains("light-theme")) {
-                setTheme("dark");
-            } else {
-                setTheme("light");
-            }
-        }
+        // Animated background
         (function() {
-            let theme = localStorage.getItem("theme");
-            if(!theme) {
-                theme = window.matchMedia('(prefers-color-scheme: light)').matches ? "light" : "dark";
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = innerWidth;
+            let h = canvas.height = innerHeight;
+            
+            window.addEventListener('resize', () => {
+                w = canvas.width = innerWidth;
+                h = canvas.height = innerHeight;
+            });
+            
+            const blobs = [];
+            for(let i = 0; i < 8; i++) {
+                blobs.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: 60 + Math.random() * 140,
+                    dx: (Math.random() - 0.5) * 0.3,
+                    dy: (Math.random() - 0.5) * 0.3,
+                    hue: 180 + Math.random() * 120
+                });
             }
-            setTheme(theme);
+            
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+                ctx.globalCompositeOperation = 'lighter';
+                
+                blobs.forEach(b => {
+                    b.x += b.dx;
+                    b.y += b.dy;
+                    
+                    if(b.x < -200) b.x = w + 200;
+                    if(b.x > w + 200) b.x = -200;
+                    if(b.y < -200) b.y = h + 200;
+                    if(b.y > h + 200) b.y = -200;
+                    
+                    const g = ctx.createRadialGradient(b.x, b.y, b.r * 0.05, b.x, b.y, b.r);
+                    g.addColorStop(0, `hsla(${b.hue}, 90%, 65%, 0.14)`);
+                    g.addColorStop(0.3, `hsla(${b.hue + 30}, 70%, 55%, 0.08)`);
+                    g.addColorStop(1, 'transparent');
+                    
+                    ctx.fillStyle = g;
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                ctx.globalCompositeOperation = 'source-over';
+                requestAnimationFrame(animate);
+            }
+            animate();
         })();
-    </script>
-    <script>
-        // Persona picker microinteraction
-        const personaReasons = {
-            student: "CHILD makes learning to code fun and visual. No prior experience needed!",
-            professional: "Automate tasks, prototype ideas, and teach others with a language anyone can read.",
-            educator: "Perfect for teaching programming concepts in a way that's accessible to all ages.",
-            hobbyist: "Jump in and create projects without the steep learning curve of traditional languages!"
+        
+        // Neumorphic theme toggle with rotation animation
+        function toggleTheme() {
+            const body = document.body;
+            const toggle = document.querySelector('.theme-toggle');
+            const icon = document.getElementById('themeIcon');
+            const rays = document.getElementById('rays');
+            
+            toggle.classList.add('rotating');
+            setTimeout(() => toggle.classList.remove('rotating'), 600);
+            
+            if(body.classList.contains('light-theme')) {
+                body.classList.remove('light-theme');
+                rays.style.opacity = '1';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.add('light-theme');
+                rays.style.opacity = '0.3';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // Load saved theme
+        if(localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-theme');
+            document.getElementById('rays').style.opacity = '0.3';
+        }
+        
+        // Microinteraction Persona Picker
+        const personaData = {
+            student: {
+                title: "Perfect for Learning!",
+                text: "CHILD makes learning to code fun and visual. Start with simple commands and build confidence. No prior experience needed - just curiosity!"
+            },
+            professional: {
+                title: "Streamline Your Workflow",
+                text: "Quickly prototype ideas and automate repetitive tasks with readable, maintainable code. Perfect for scripting and rapid development."
+            },
+            educator: {
+                title: "Teach with Clarity",
+                text: "Introduce programming concepts without overwhelming students with syntax. CHILD's English-like commands make lessons intuitive and engaging."
+            },
+            hobbyist: {
+                title: "Build Your Dreams",
+                text: "Jump right into creating projects without the steep learning curve. Focus on what you want to build, not how to write it."
+            }
         };
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.persona-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    document.getElementById('personaReason').textContent = personaReasons[btn.dataset.persona] || '';
-                });
+        
+        document.querySelectorAll('.persona-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                const persona = this.dataset.persona;
+                const data = personaData[persona];
+                const reasonBox = document.getElementById('personaReason');
+                
+                reasonBox.classList.remove('active');
+                setTimeout(() => {
+                    reasonBox.querySelector('.reason-title').textContent = data.title;
+                    reasonBox.querySelector('.reason-text').textContent = data.text;
+                    reasonBox.classList.add('active');
+                }, 100);
             });
         });
-    </script>
-    <script>
-        // Fade-in on scroll for sections
-        function animateSections() {
-            document.querySelectorAll('.fade-section').forEach(section => {
-                const rect = section.getBoundingClientRect();
-                if(rect.top < window.innerHeight * 0.92) {
-                    section.classList.add('visible');
+        
+        // Set default persona
+        document.querySelector('.persona-btn').click();
+        
+        // Fade in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        
+        // Horizontal scroll hint
+        const scrollContainer = document.querySelector('.scroll-container');
+        if(scrollContainer) {
+            let isScrolling = false;
+            scrollContainer.addEventListener('scroll', () => {
+                if(!isScrolling) {
+                    isScrolling = true;
+                    setTimeout(() => isScrolling = false, 1000);
                 }
             });
         }
-        window.addEventListener('scroll', animateSections);
-        window.addEventListener('DOMContentLoaded', animateSections);
-
-        // Button ripple microinteraction
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                const circle = document.createElement('span');
-                circle.className = 'ripple';
-                const rect = btn.getBoundingClientRect();
-                circle.style.left = (e.clientX - rect.left) + 'px';
-                circle.style.top = (e.clientY - rect.top) + 'px';
-                circle.style.width = circle.style.height = Math.max(rect.width, rect.height) + 'px';
-                btn.appendChild(circle);
-                setTimeout(() => circle.remove(), 600);
-            });
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const target = document.querySelector(this.getAttribute('href'));
-                if(target) {
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        // Self-drawing SVG animation for all .draw-path elements (triggered on scroll/visibility)
-        function animateDrawPaths() {
-            document.querySelectorAll('.draw-path').forEach(path => {
-                const rect = path.getBoundingClientRect();
-                if(rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-                    path.style.animation = 'none';
-                    void path.offsetWidth;
-                    path.style.animation = '';
-                }
-            });
-        }
-        window.addEventListener('scroll', animateDrawPaths);
-        window.addEventListener('DOMContentLoaded', animateDrawPaths);
-
-        // Isometric animation effect for demo
-        document.addEventListener('DOMContentLoaded', function() {
-            const iso = document.querySelector('.isometric-group');
-            if(iso) {
-                iso.animate([
-                    { transform: 'scale(0.8) rotateX(30deg) rotateY(10deg)', opacity: 0 },
-                    { transform: 'scale(1) rotateX(0deg) rotateY(0deg)', opacity: 1 }
-                ], {
-                    duration: 1200,
-                    fill: 'forwards',
-                    easing: 'cubic-bezier(.77,0,.18,1)'
-                });
-            }
-        });
-    </script>
-    <script id="isometric-enhance">
-    (function(){
-        // Find isometric group and enable 3D flow + add a small moving dot along the path for visual flow
-        const iso = document.querySelector('.isometric-group');
-        if(!iso) return;
-        // Mark animate class to start CSS 3D tilt
-        iso.classList.add('animate');
-
-        // Ensure the main polyline/path has an id we can reference
-        const poly = iso.querySelector('polyline') || iso.querySelector('path');
-        if(poly){
-            poly.setAttribute('id','isoPath');
-            // Slightly shorten dash for better visuals
-            const length = (poly.getTotalLength && typeof poly.getTotalLength === 'function') ? Math.ceil(poly.getTotalLength()) : 220;
-            poly.style.strokeDasharray = length;
-            poly.style.strokeDashoffset = length;
-            poly.style.animation = 'draw 1s ease forwards';
-
-            // Add a small moving dot using animateMotion for a flowing feel
-            if(!iso.querySelector('#isoDot')){
-                const svgns = 'http://www.w3.org/2000/svg';
-                const dot = document.createElementNS(svgns,'circle');
-                dot.setAttribute('r','3.5');
-                dot.setAttribute('fill','#f7b731');
-                dot.setAttribute('id','isoDot');
-                const m = document.createElementNS(svgns,'animateMotion');
-                m.setAttribute('dur','2.6s');
-                m.setAttribute('repeatCount','indefinite');
-                m.setAttribute('rotate','auto');
-                // mpath via href attr (modern browsers)
-                const mpath = document.createElementNS(svgns,'mpath');
-                try{ mpath.setAttribute('href','#isoPath'); }catch(e){ mpath.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href','#isoPath'); }
-                m.appendChild(mpath);
-                dot.appendChild(m);
-                iso.appendChild(dot);
-            }
-        }
-    })();
     </script>
 </body>
 </html>
