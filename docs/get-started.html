@@ -2,347 +2,1153 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <icon rel="icon" href="childicon.png" type="image/x-icon"></icon>
+    <link rel="icon" href="childicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get Started with CHILD</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
         :root {
-            --primary: #4facfe;
-            --secondary: #16213e;
-            --accent: #f7b731;
-            --bg-dark: #0f0f1e;
-            --bg-light: #f7f7fa;
-            --text-dark: #eee;
-            --text-light: #222;
-            --card-dark: #1a1a2e;
-            --card-light: #fff;
-            --border-dark: #4facfe33;
-            --border-light: #e0e0e0;
+            --primary: #06b6d4;
+            --primary-dark: #0891b2;
+            --secondary: #8b5cf6;
+            --secondary-dark: #7c3aed;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            
+            --bg: #000000;
+            --bg-elevated: #0a0a0a;
+            --bg-card: #111111;
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border: rgba(255, 255, 255, 0.1);
+            
+            --glow-primary: rgba(6, 182, 212, 0.3);
+            --glow-secondary: rgba(139, 92, 246, 0.3);
         }
+        
+        body.light {
+            --bg: #ffffff;
+            --bg-elevated: #fafafa;
+            --bg-card: #f5f5f5;
+            --text: #09090b;
+            --text-secondary: #52525b;
+            --border: rgba(0, 0, 0, 0.1);
+            --glow-primary: rgba(6, 182, 212, 0.15);
+            --glow-secondary: rgba(139, 92, 246, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-dark);
-            transition: background 0.3s, color 0.3s;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
-        .light-theme {
-            background: var(--bg-light);
-            color: var(--text-light);
+        
+        /* Background */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
         }
+        
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: 7s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-50px, 50px) scale(0.9); }
+        }
+        
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.05;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        body.light .grid-bg {
+            opacity: 0.03;
+        }
+        
+        /* Container */
         .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 32px;
+            right: 32px;
+            z-index: 1000;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px var(--glow-primary);
+        }
+        
+        .theme-icon {
+            width: 28px;
+            height: 28px;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .theme-toggle.rotating .theme-icon {
+            transform: rotate(360deg) scale(0.8);
+        }
+        
+        /* Header */
+        .header {
+            padding: 120px 20px 80px;
+            text-align: center;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+            transform: translateX(-4px);
+        }
+        
+        .back-link svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .page-title {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 40px 20px 100px;
+        }
+        
+        /* Steps */
+        .steps-section {
+            margin-bottom: 80px;
+        }
+        
+        .section-header {
+            margin-bottom: 40px;
+        }
+        
+        .section-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        
+        .section-description {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
             max-width: 900px;
             margin: 0 auto;
-            padding: 40px 20px 60px 20px;
         }
-        h1, h2, h3, h4 {
-            color: var(--primary);
-            margin-top: 2em;
-            margin-bottom: 0.5em;
-        }
-        h1 { font-size: 2.8em; text-align: center; margin-top: 0.5em; }
-        h2 { font-size: 2em; border-bottom: 1px solid var(--border-dark); padding-bottom: 0.2em; }
-        h3 { font-size: 1.3em; margin-top: 1.5em; }
-        h4 { font-size: 1.1em; margin-top: 1em; }
-        .light-theme h1, .light-theme h2, .light-theme h3, .light-theme h4 {
-            color: #2d5be3;
-            border-bottom: 1px solid var(--border-light);
-        }
-        code, .command-box {
-            font-family: 'Courier New', monospace;
-            background: var(--card-dark);
-            color: #4ecdc4;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 1em;
-        }
-        .light-theme code, .light-theme .command-box {
-            background: var(--card-light);
-            color: #2d5be3;
-        }
-        pre {
-            background: var(--card-dark);
-            color: #fff;
-            padding: 18px;
-            border-radius: 10px;
-            overflow-x: auto;
-            margin-bottom: 1.5em;
-            border: 1px solid var(--border-dark);
-        }
-        .light-theme pre {
-            background: var(--card-light);
-            color: #222;
-            border: 1px solid var(--border-light);
-        }
-        pre code { background: none; color: inherit; font-size: 1em; padding: 0; }
-        .keyword { color: #ff6b6b; }
-        .string { color: #4ecdc4; }
-        .number { color: #f7b731; }
-        .comment { color: #888; font-style: italic; }
-        .steps { margin: 2em 0; }
+        
         .step {
-            background: var(--card-dark);
-            border-left: 4px solid var(--primary);
-            border-radius: 10px;
-            padding: 24px 24px 18px 24px;
-            margin-bottom: 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 32px;
+            align-items: start;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .light-theme .step {
-            background: var(--card-light);
-            border-left: 4px solid #2d5be3;
+        
+        .step::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--glow-primary) 0%, var(--glow-secondary) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
+        
+        .step:hover {
+            border-color: var(--primary);
+            transform: translateX(8px);
+            box-shadow: 0 10px 40px var(--glow-primary);
+        }
+        
+        .step:hover::before {
+            opacity: 0.05;
+        }
+        
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-content {
+            position: relative;
+            z-index: 1;
+        }
+        
         .step-title {
-            font-size: 1.3em;
-            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .step-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .step-description a {
             color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
         }
-        .light-theme .step-title { color: #2d5be3; }
-        .command-box {
-            background: var(--bg-dark);
-            color: #4ecdc4;
-            border: 1px solid var(--border-dark);
+        
+        .step-description a:hover {
+            text-decoration: underline;
         }
-        .light-theme .command-box {
-            background: var(--bg-light);
-            color: #2d5be3;
-            border: 1px solid var(--border-light);
-        }
-        .demo-section {
-            background: var(--secondary);
+        
+        .command {
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 30px 20px;
-            margin-bottom: 2em;
-            border: 1px solid var(--border-dark);
-        }
-        .light-theme .demo-section {
-            background: #eaf1ff;
-            border: 1px solid var(--border-light);
-        }
-        .demo-title {
-            color: var(--accent);
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-        .demo-box {
-            background: var(--card-dark);
-            border-radius: 8px;
-            padding: 18px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border-dark);
-        }
-        .light-theme .demo-box {
-            background: var(--card-light);
-            border: 1px solid var(--border-light);
-        }
-        .demo-input, .demo-output {
-            width: 100%;
-            min-height: 60px;
-            background: var(--bg-dark);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
+            padding: 16px 20px;
             font-family: 'Courier New', monospace;
-            font-size: 1em;
-            padding: 10px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--success);
+            overflow-x: auto;
+            position: relative;
+            margin-bottom: 16px;
         }
-        .light-theme .demo-input, .light-theme .demo-output {
-            background: var(--bg-light);
-            color: #222;
+        
+        .command::before {
+            content: '$';
+            color: var(--primary);
+            margin-right: 8px;
         }
-        .demo-btn {
-            background: var(--primary);
-            color: #fff;
+        
+        .step-note {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        
+        .step-note strong {
+            color: var(--accent);
+        }
+        
+        .step-list {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        
+        .step-list li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        
+        .step-list code {
+            background: var(--bg-elevated);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        /* Interactive Demos */
+        .demos-section {
+            margin-bottom: 80px;
+        }
+        
+        .demos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        
+        .demo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .demo-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px var(--glow-primary);
+            transform: translateY(-4px);
+        }
+        
+        .demo-header {
+            padding: 24px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .demo-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .demo-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .demo-body {
+            padding: 24px;
+        }
+        
+        .demo-input {
+            width: 100%;
+            min-height: 120px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--text);
+            resize: vertical;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--glow-primary);
+        }
+        
+        .demo-button {
+            width: 100%;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
             border: none;
-            border-radius: 6px;
-            padding: 8px 18px;
-            font-size: 1em;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
         }
-        .demo-btn:hover {
-            background: #00f2fe;
-            color: var(--secondary);
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--glow-primary);
         }
-        .footer {
-            background: #0a0a14;
-            color: #b3b3b3;
+        
+        .demo-output-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .demo-output {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--success);
+            min-height: 100px;
+            overflow-x: auto;
+        }
+        
+        /* Resources */
+        .resources-section {
+            margin-bottom: 80px;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        
+        .resource-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .resource-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px var(--glow-primary);
+        }
+        
+        .resource-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .resource-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .resource-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .resource-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        
+        .resource-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 80px 20px 40px;
             text-align: center;
-            padding: 40px 20px 20px 20px;
-            margin-top: 60px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-elevated);
         }
+        
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
+            gap: 40px;
+            margin-bottom: 32px;
             flex-wrap: wrap;
         }
+        
         .footer-links a {
-            color: var(--primary);
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: color 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        .footer-links a:hover { color: #00f2fe; }
-        .theme-toggle {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 100;
-            background: var(--card-dark);
+        
+        .footer-links a:hover {
             color: var(--primary);
-            border: none;
-            border-radius: 50px;
-            padding: 10px 22px;
-            font-size: 1em;
-            cursor: pointer;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            transition: background 0.3s, color 0.3s;
+            transform: translateY(-2px);
         }
-        .light-theme .theme-toggle {
-            background: var(--card-light);
-            color: #2d5be3;
+        
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 8px 0;
         }
-        @media (max-width: 700px) {
-            .container { padding: 20px 5vw 40px 5vw; }
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.3em; }
-            .theme-toggle { top: 10px; right: 10px; padding: 8px 14px; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+            }
+            
+            .header {
+                padding: 100px 20px 60px;
+            }
+            
+            .step {
+                grid-template-columns: 1fr;
+                padding: 32px 24px;
+                text-align: center;
+            }
+            
+            .step-number {
+                margin: 0 auto;
+            }
+            
+            .demos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                gap: 20px;
+            }
         }
+        
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #c678dd; font-weight: 600; }
+        .string { color: #98c379; }
+        .number { color: #d19a66; }
+        .comment { color: var(--text-secondary); }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
-    <div class="container">
-        <h1>🚀 Get Started with CHILD</h1>
-        <p>Follow these steps to install CHILD, set up the VS Code extension, and try interactive demos!</p>
-        <div class="steps">
-            <div class="step">
-                <div class="step-title">1. Download CHILD</div>
-                <p>Clone the repository or download the latest release:</p>
-                <div class="command-box">git clone https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies.git</div>
-            </div>
-            <div class="step">
-                <div class="step-title">2. Install Python</div>
-                <p>Make sure you have <b>Python 3.6+</b> installed. Download from <a href="https://python.org" target="_blank">python.org</a>.</p>
-                <div class="command-box">python --version</div>
-            </div>
-            <div class="step">
-                <div class="step-title">3. Install the VS Code Extension</div>
-                <ol>
-                    <li>Find <code>CHILD-Computational-High-level-Instruction-Language-for-Dummies-1.0.0.vsix</code> in the repo (main folder or releases).</li>
-                    <li>Open VS Code, press <b>Ctrl+Shift+P</b> and select <b>Extensions: Install from VSIX...</b></li>
-                    <li>Choose the <code>.vsix</code> file you downloaded.</li>
-                </ol>
-                <p><b>Note:</b> The extension includes a built-in interpreter. You only need to install it <u>once</u>!</p>
-            </div>
-            <div class="step">
-                <div class="step-title">4. Run Your First Program</div>
-                <p>
-                    <b>In VS Code:</b> Open your <code>hello.child</code> file and click <b>Run</b> (▶️) at the top, or right-click and choose <b>Run CHILD File</b>.<br>
-                    <b>Without VS Code?</b> You can still use the standalone interpreter (<code>child.py</code>, also given in the repo):
-                </p>
-                <div class="command-box">python child.py hello.child</div>
-            </div>
+    <!-- Background Effects -->
+    <div class="bg-gradient">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+    <div class="grid-bg"></div>
+    
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+    </button>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </a>
+            <h1 class="page-title">Get Started</h1>
+            <p class="page-subtitle">
+                Follow these steps to install CHILD and start coding in minutes
+            </p>
         </div>
-        <h2>Interactive Demos</h2>
-        <div class="demo-section">
-            <div class="demo-title">Demo 1: Say Hello</div>
-            <div class="demo-box">
-                <textarea class="demo-input" id="demo1Input">say "Hello, World!"</textarea>
-                <button class="demo-btn" onclick="runDemo('demo1Input','demo1Output')">Run</button>
-                <div>
-                    <b>Output:</b>
-                    <pre class="demo-output" id="demo1Output">// Output will appear here</pre>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Installation Steps -->
+            <section class="steps-section reveal">
+                <div class="section-header">
+                    <span class="section-tag">Installation</span>
+                    <h2 class="section-title">Quick Setup Guide</h2>
+                    <p class="section-description">Get CHILD running on your machine in just a few steps</p>
                 </div>
-            </div>
-        </div>
-        <div class="demo-section">
-            <div class="demo-title">Demo 2: Ask for Name</div>
-            <div class="demo-box">
-                <textarea class="demo-input" id="demo2Input">ask "What is your name?" and remember it as name
+                
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Download CHILD</h3>
+                            <p class="step-description">
+                                Clone the repository from GitHub to get the latest version of CHILD
+                            </p>
+                            <div class="command">git clone https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies.git</div>
+                            <p class="step-description">
+                                Or download the ZIP file directly from the <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies" target="_blank">repository page</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Install Python</h3>
+                            <p class="step-description">
+                                CHILD requires Python 3.6 or higher. Download from <a href="https://python.org" target="_blank">python.org</a> if you don't have it installed.
+                            </p>
+                            <div class="command">python --version</div>
+                            <div class="step-note">
+                                <strong>Note:</strong> Make sure Python is added to your system PATH during installation
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Install VS Code Extension</h3>
+                            <p class="step-description">
+                                Get professional IDE support with syntax highlighting and auto-completion
+                            </p>
+                            <ol class="step-list">
+                                <li>Locate <code>CHILD-Computational-High-level-Instruction-Language-for-Dummies-1.0.0.vsix</code> in the repository</li>
+                                <li>Open VS Code and press <code>Ctrl+Shift+P</code> (or <code>Cmd+Shift+P</code> on Mac)</li>
+                                <li>Type "Extensions: Install from VSIX..." and select it</li>
+                                <li>Choose the <code>.vsix</code> file you downloaded</li>
+                            </ol>
+                            <div class="step-note">
+                                <strong>Pro Tip:</strong> The extension includes a built-in interpreter. You only need to install it once!
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Run Your First Program</h3>
+                            <p class="step-description">
+                                Create a file called <code>hello.child</code> and add your first CHILD code
+                            </p>
+                            <div class="command">python child.py hello.child</div>
+                            <p class="step-description" style="margin-top: 16px;">
+                                <strong>In VS Code:</strong> Simply click the Run button (▶️) or right-click and select "Run CHILD File"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Interactive Demos -->
+            <section class="demos-section reveal">
+                <div class="section-header">
+                    <span class="section-tag">Try It Out</span>
+                    <h2 class="section-title">Interactive Demos</h2>
+                    <p class="section-description">Test CHILD code directly in your browser</p>
+                </div>
+                
+                <div class="demos-grid">
+                    <div class="demo-card">
+                        <div class="demo-header">
+                            <h3 class="demo-title">Demo 1: Say Hello</h3>
+                            <p class="demo-subtitle">The classic first program in any language</p>
+                        </div>
+                        <div class="demo-body">
+                            <textarea class="demo-input" id="demo1" spellcheck="false">say "Hello, World!"</textarea>
+                            <button class="demo-button" onclick="runDemo('demo1', 'output1', false)">▶ Run Code</button>
+                            <span class="demo-output-label">Output:</span>
+                            <pre class="demo-output" id="output1">// Click "Run Code" to see output</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-header">
+                            <h3 class="demo-title">Demo 2: Ask for Input</h3>
+                            <p class="demo-subtitle">Interactive programs that respond to users</p>
+                        </div>
+                        <div class="demo-body">
+                            <textarea class="demo-input" id="demo2" spellcheck="false">ask "What is your name?" and remember it as name
 say "Hello, "
-say name</textarea>
-                <button class="demo-btn" onclick="runDemo('demo2Input','demo2Output', true)">Run</button>
-                <div>
-                    <b>Output:</b>
-                    <pre class="demo-output" id="demo2Output">// Output will appear here</pre>
-                </div>
-            </div>
-        </div>
-        <h2>Resources</h2>
-        <ul>
-            <li><a href="documentation.html">Full Documentation</a></li>
-            <li><a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub Repository</a></li>
-            <li><a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Example Programs</a></li>
-        </ul>
-    </div>
-    <div class="footer">
-        <div class="footer-links">
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub</a>
-            <a href="documentation.html">Documentation</a>
-            <a href="get-started.html">Get Started</a>
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
-        </div>
-        <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
-        <p>Licensed under GPL v3 | Open Source Forever</p>
-    </div>
-    <script>
-        function setTheme(theme) {
-            if(theme === "light") {
-                document.body.classList.add("light-theme");
-                document.querySelector(".theme-toggle").textContent = "⨀ Light";
-            } else {
-                document.body.classList.remove("light-theme");
-                document.querySelector(".theme-toggle").textContent = "⨂ Dark";
-            }
-            localStorage.setItem("theme", theme);
-        }
-        function toggleTheme() {
-            if(document.body.classList.contains("light-theme")) {
-                setTheme("dark");
-            } else {
-                setTheme("light");
-            }
-        }
-        (function() {
-            let theme = localStorage.getItem("theme");
-            if(!theme) {
-                theme = window.matchMedia('(prefers-color-scheme: light)').matches ? "light" : "dark";
-            }
-            setTheme(theme);
-        })();
+say name
+say "! Welcome to CHILD."</textarea>
+                            <button class="demo-button" onclick="runDemo('demo2', 'output2', true)">▶ Run Code</button>
+                            <span class="demo-output-label">Output:</span>
+                            <pre class="demo-output" id="output2">// Click "Run Code" to see output</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-header">
+                            <h3 class="demo-title">Demo 3: Loops</h3>
+                            <p class="demo-subtitle">Repeat actions with lists and loops</p>
+                        </div>
+                        <div class="demo-body">
+                            <textarea class="demo-input" id="demo3" spellcheck="false">list [1, 2, 3, 4, 5] as numbers
 
-        // Demo runner for interactive CHILD code
-        function runDemo(inputId, outputId, askMode) {
+for each item in numbers as num
+    say num
+end</textarea>
+                            <button class="demo-button" onclick="runDemo('demo3', 'output3', false)">▶ Run Code</button>
+                            <span class="demo-output-label">Output:</span>
+                            <pre class="demo-output" id="output3">// Click "Run Code" to see output</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-header">
+                            <h3 class="demo-title">Demo 4: Conditions</h3>
+                            <p class="demo-subtitle">Make decisions based on conditions</p>
+                        </div>
+                        <div class="demo-body">
+                            <textarea class="demo-input" id="demo4" spellcheck="false">remember 10 as age
+
+if age is greater than or equal to 18
+    say "You are an adult"
+otherwise
+    say "You are a minor"
+end</textarea>
+                            <button class="demo-button" onclick="runDemo('demo4', 'output4', false)">▶ Run Code</button>
+                            <span class="demo-output-label">Output:</span>
+                            <pre class="demo-output" id="output4">// Click "Run Code" to see output</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Resources -->
+            <section class="resources-section reveal">
+                <div class="section-header">
+                    <span class="section-tag">Resources</span>
+                    <h2 class="section-title">Learn More</h2>
+                    <p class="section-description">Explore documentation, examples, and community resources</p>
+                </div>
+                
+                <div class="resources-grid">
+                    <a href="documentation.html" class="resource-card">
+                        <div class="resource-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                        </div>
+                        <h3 class="resource-title">Documentation</h3>
+                        <p class="resource-description">Complete guide to CHILD syntax, features, and best practices</p>
+                    </a>
+                    
+                    <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies" target="_blank" class="resource-card">
+                        <div class="resource-icon">
+                            <svg viewBox="0 0 24 24" fill="white">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </div>
+                        <h3 class="resource-title">GitHub Repository</h3>
+                        <p class="resource-description">Source code, releases, and contribution guidelines</p>
+                    </a>
+                    
+                    <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples" target="_blank" class="resource-card">
+                        <div class="resource-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </div>
+                        <h3 class="resource-title">Example Programs</h3>
+                        <p class="resource-description">Learn from real-world CHILD programs and projects</p>
+                    </a>
+                    
+                    <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues" target="_blank" class="resource-card">
+                        <div class="resource-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                        </div>
+                        <h3 class="resource-title">Report Issues</h3>
+                        <p class="resource-description">Found a bug? Have a feature request? Let us know!</p>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+                <a href="documentation.html">Documentation</a>
+                <a href="index.html">Home</a>
+                <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
+                <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
+            </div>
+            
+            <p class="footer-text">CHILD Language © 2025 RoyalPgYtPc</p>
+            <p class="footer-text">Licensed under GPL v3 • Open Source Forever</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const toggle = document.querySelector('.theme-toggle');
+            
+            toggle.classList.add('rotating');
+            setTimeout(() => toggle.classList.remove('rotating'), 500);
+            
+            body.classList.toggle('light');
+            
+            const theme = body.classList.contains('light') ? 'light' : 'dark';
+            localStorage.setItem('theme', theme);
+        }
+        
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light');
+        }
+        
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Demo Runner
+        function runDemo(inputId, outputId, needsInput) {
             const input = document.getElementById(inputId).value;
-            let output = '';
-            let remembered = {};
-            let lines = input.split('\n');
+            const output = document.getElementById(outputId);
+            let result = '';
+            let variables = {};
+            
+            const lines = input.split('\n').map(line => line.trim()).filter(line => line);
+            
             for (let line of lines) {
-                line = line.trim();
-                if (line.startsWith('say ')) {
-                    let match = line.match(/say\s+"([^"]*)"/);
-                    if (match) output += match[1] + '\n';
-                    else if (line.match(/say\s+([a-zA-Z_][a-zA-Z0-9_]*)/)) {
-                        let varName = line.match(/say\s+([a-zA-Z_][a-zA-Z0-9_]*)/)[1];
-                        output += (remembered[varName] || '[undefined]') + '\n';
-                    } else output += '[say] ' + line.slice(4) + '\n';
-                } else if (line.startsWith('ask ')) {
-                    let match = line.match(/ask\s+"([^"]*)"\s+and remember it as ([a-zA-Z_][a-zA-Z0-9_]*)/);
-                    if (match && askMode) {
-                        let userInput = prompt(match[1], "Alice");
-                        remembered[match[2]] = userInput || "Alice";
-                        output += '[?] ' + match[1] + '\n';
-                    } else if (match) {
-                        remembered[match[2]] = "Alice";
-                        output += '[?] ' + match[1] + '\n';
-                    } else output += '[ask] ' + line.slice(4) + '\n';
-                } else if (line) {
-                    output += '[not executed in demo] ' + line + '\n';
+                try {
+                    // Handle 'say' command
+                    if (line.startsWith('say ')) {
+                        const content = line.substring(4).trim();
+                        
+                        // String literal
+                        const stringMatch = content.match(/^"([^"]*)"$/);
+                        if (stringMatch) {
+                            result += stringMatch[1];
+                            continue;
+                        }
+                        
+                        // Variable
+                        const varMatch = content.match(/^([a-zA-Z_][a-zA-Z0-9_]*)$/);
+                        if (varMatch) {
+                            const varName = varMatch[1];
+                            if (variables.hasOwnProperty(varName)) {
+                                result += variables[varName];
+                            } else {
+                                result += `[undefined: ${varName}]`;
+                            }
+                            continue;
+                        }
+                        
+                        result += content;
+                    }
+                    // Handle 'ask' command
+                    else if (line.includes('ask ') && line.includes('and remember it as')) {
+                        const match = line.match(/ask\s+"([^"]*)"\s+and remember it as\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+                        if (match) {
+                            const question = match[1];
+                            const varName = match[2];
+                            
+                            if (needsInput) {
+                                const userInput = prompt(question, 'Alice');
+                                variables[varName] = userInput || 'Alice';
+                                result += `[User Input: ${variables[varName]}]\n`;
+                            } else {
+                                variables[varName] = 'Alice';
+                                result += `[Simulated Input: Alice]\n`;
+                            }
+                        }
+                    }
+                    // Handle 'remember' command
+                    else if (line.startsWith('remember ')) {
+                        const match = line.match(/remember\s+(.+?)\s+as\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+                        if (match) {
+                            const value = match[1].trim();
+                            const varName = match[2];
+                            
+                            // Try to parse as number
+                            if (!isNaN(value)) {
+                                variables[varName] = parseFloat(value);
+                            } else if (value.startsWith('"') && value.endsWith('"')) {
+                                variables[varName] = value.slice(1, -1);
+                            } else {
+                                variables[varName] = value;
+                            }
+                        }
+                    }
+                    // Handle 'list' command
+                    else if (line.startsWith('list ')) {
+                        const match = line.match(/list\s+\[(.+?)\]\s+as\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+                        if (match) {
+                            const items = match[1].split(',').map(item => {
+                                item = item.trim();
+                                return !isNaN(item) ? parseFloat(item) : item;
+                            });
+                            const varName = match[2];
+                            variables[varName] = items;
+                        }
+                    }
+                    // Handle 'for each' loop
+                    else if (line.startsWith('for each item in ')) {
+                        const match = line.match(/for each item in\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+as\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+                        if (match) {
+                            const listName = match[1];
+                            const itemName = match[2];
+                            
+                            if (variables.hasOwnProperty(listName) && Array.isArray(variables[listName])) {
+                                // Find the matching 'end'
+                                let loopBody = [];
+                                let i = lines.indexOf(line) + 1;
+                                let depth = 1;
+                                
+                                while (i < lines.length && depth > 0) {
+                                    if (lines[i].startsWith('for each') || lines[i].startsWith('if ')) {
+                                        depth++;
+                                    } else if (lines[i] === 'end') {
+                                        depth--;
+                                        if (depth === 0) break;
+                                    }
+                                    if (depth > 0) {
+                                        loopBody.push(lines[i]);
+                                    }
+                                    i++;
+                                }
+                                
+                                // Execute loop body for each item
+                                for (let item of variables[listName]) {
+                                    variables[itemName] = item;
+                                    
+                                    for (let bodyLine of loopBody) {
+                                        if (bodyLine.startsWith('say ')) {
+                                            const content = bodyLine.substring(4).trim();
+                                            
+                                            const stringMatch = content.match(/^"([^"]*)"$/);
+                                            if (stringMatch) {
+                                                result += stringMatch[1] + '\n';
+                                                continue;
+                                            }
+                                            
+                                            const varMatch = content.match(/^([a-zA-Z_][a-zA-Z0-9_]*)$/);
+                                            if (varMatch) {
+                                                const varName = varMatch[1];
+                                                if (variables.hasOwnProperty(varName)) {
+                                                    result += variables[varName] + '\n';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Handle 'if' conditions
+                    else if (line.startsWith('if ')) {
+                        const greaterEqualMatch = line.match(/if\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+is greater than or equal to\s+(.+)/);
+                        const equalMatch = line.match(/if\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+is\s+"([^"]*)"/);
+                        
+                        let condition = false;
+                        
+                        if (greaterEqualMatch) {
+                            const varName = greaterEqualMatch[1];
+                            const value = parseFloat(greaterEqualMatch[2]);
+                            condition = variables[varName] >= value;
+                        } else if (equalMatch) {
+                            const varName = equalMatch[1];
+                            const value = equalMatch[2];
+                            condition = variables[varName] === value;
+                        }
+                        
+                        // Find if/otherwise/end blocks
+                        let ifBody = [];
+                        let elseBody = [];
+                        let i = lines.indexOf(line) + 1;
+                        let inElse = false;
+                        let depth = 1;
+                        
+                        while (i < lines.length && depth > 0) {
+                            if (lines[i].startsWith('if ') || lines[i].startsWith('for each')) {
+                                depth++;
+                            } else if (lines[i] === 'otherwise' && depth === 1) {
+                                inElse = true;
+                                i++;
+                                continue;
+                            } else if (lines[i] === 'end') {
+                                depth--;
+                                if (depth === 0) break;
+                            }
+                            
+                            if (depth > 0) {
+                                if (inElse) {
+                                    elseBody.push(lines[i]);
+                                } else {
+                                    ifBody.push(lines[i]);
+                                }
+                            }
+                            i++;
+                        }
+                        
+                        // Execute appropriate block
+                        const bodyToExecute = condition ? ifBody : elseBody;
+                        for (let bodyLine of bodyToExecute) {
+                            if (bodyLine.startsWith('say ')) {
+                                const content = bodyLine.substring(4).trim();
+                                const stringMatch = content.match(/^"([^"]*)"$/);
+                                if (stringMatch) {
+                                    result += stringMatch[1] + '\n';
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {
+                    result += `[Error: ${e.message}]\n`;
                 }
             }
-            document.getElementById(outputId).textContent = output || '// Output will appear here';
+            
+            output.textContent = result || '// No output generated';
         }
     </script>
 </body>

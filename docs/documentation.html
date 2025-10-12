@@ -2,782 +2,1300 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <icon rel="icon" href="childicon.png" type="image/x-icon"></icon>
+    <link rel="icon" href="childicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHILD Documentation</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
         :root {
-            --primary: #4facfe;
-            --secondary: #16213e;
-            --accent: #f7b731;
-            --bg-dark: #0f0f1e;
-            --bg-light: #f7f7fa;
-            --text-dark: #eee;
-            --text-light: #222;
-            --card-dark: #1a1a2e;
-            --card-light: #fff;
-            --border-dark: #4facfe33;
-            --border-light: #e0e0e0;
+            --primary: #06b6d4;
+            --primary-dark: #0891b2;
+            --secondary: #8b5cf6;
+            --secondary-dark: #7c3aed;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            
+            --bg: #000000;
+            --bg-elevated: #0a0a0a;
+            --bg-card: #111111;
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border: rgba(255, 255, 255, 0.1);
+            
+            --sidebar-bg: #050505;
+            --sidebar-border: rgba(255, 255, 255, 0.08);
         }
+        
+        body.light {
+            --bg: #ffffff;
+            --bg-elevated: #fafafa;
+            --bg-card: #f5f5f5;
+            --text: #09090b;
+            --text-secondary: #52525b;
+            --border: rgba(0, 0, 0, 0.1);
+            --sidebar-bg: #fafafa;
+            --sidebar-border: rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-dark);
-            transition: background 0.3s, color 0.3s;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
-        .light-theme {
-            background: var(--bg-light);
-            color: var(--text-light);
-        }
+        
+        /* Layout */
         .layout {
             display: flex;
-            flex-direction: row;
-            align-items: flex-start;
+            min-height: 100vh;
         }
-        .toc-sidebar {
-            width: 260px;
-            min-width: 200px;
-            max-width: 300px;
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            position: fixed;
             height: 100vh;
-            position: sticky;
-            top: 0;
-            align-self: flex-start;
-            background: var(--secondary);
-            border-right: 1px solid var(--border-dark);
-            padding: 0;
-            z-index: 10;
             overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
         }
-        .toc {
-            padding: 32px 18px 32px 18px;
-            position: sticky;
-            top: 0;
+        
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid var(--sidebar-border);
         }
-        .toc h3 {
-            margin-top: 0;
-            font-size: 1.2em;
-            color: var(--primary);
-            letter-spacing: 1px;
-        }
-        .toc ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        .toc li {
-            margin-bottom: 0.7em;
-        }
-        .toc a {
-            color: #b3b3b3;
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             text-decoration: none;
-            font-size: 1em;
-            transition: color 0.2s;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .sidebar-logo svg {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .sidebar-nav {
+            padding: 24px 0;
+        }
+        
+        .nav-section {
+            margin-bottom: 32px;
+        }
+        
+        .nav-title {
+            padding: 8px 24px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-link {
             display: block;
-            padding: 4px 0 4px 8px;
+            padding: 10px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
             border-left: 3px solid transparent;
         }
-        .toc a:hover, .toc a:focus, .toc a.active {
+        
+        .nav-link:hover {
             color: var(--primary);
-            border-left: 3px solid var(--primary);
-            background: #181828;
+            background: var(--bg-card);
+            border-left-color: var(--primary);
         }
-        .doc-content {
+        
+        .nav-link.active {
+            color: var(--primary);
+            background: var(--bg-card);
+            border-left-color: var(--primary);
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 101;
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 32px;
+            right: 32px;
+            z-index: 1000;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            border-color: var(--primary);
+        }
+        
+        .theme-icon {
+            width: 28px;
+            height: 28px;
+        }
+        
+        /* Main Content */
+        .main-content {
             flex: 1;
-            margin-left: 0;
-            padding: 40px 20px 60px 20px;
-            min-width: 0;
+            margin-left: 280px;
+            padding: 80px 60px 100px;
+            max-width: 1200px;
         }
-        h1, h2, h3, h4 {
+        
+        /* Typography */
+        h1 {
+            font-size: clamp(40px, 6vw, 56px);
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            font-size: clamp(32px, 4vw, 40px);
+            font-weight: 800;
+            margin-top: 80px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+            scroll-margin-top: 100px;
+        }
+        
+        h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 48px;
+            margin-bottom: 16px;
             color: var(--primary);
-            margin-top: 2em;
-            margin-bottom: 0.5em;
+            scroll-margin-top: 100px;
         }
-        h1 { font-size: 2.8em; text-align: center; margin-top: 0.5em; }
-        h2 { font-size: 2em; border-bottom: 1px solid var(--border-dark); padding-bottom: 0.2em; }
-        h3 { font-size: 1.3em; margin-top: 1.5em; }
-        h4 { font-size: 1.1em; margin-top: 1em; }
-        .light-theme h1, .light-theme h2, .light-theme h3, .light-theme h4 {
-            color: #2d5be3;
-            border-bottom: 1px solid var(--border-light);
+        
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            scroll-margin-top: 100px;
         }
-        code, .command-box {
+        
+        p {
+            margin-bottom: 16px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        ul, ol {
+            margin-bottom: 24px;
+            padding-left: 24px;
+            line-height: 1.8;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+        
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border);
+            margin: 64px 0;
+        }
+        
+        /* Code Blocks */
+        code {
+            background: var(--bg-card);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 6px;
             font-family: 'Courier New', monospace;
-            background: var(--card-dark);
-            color: #4ecdc4;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 1em;
+            font-size: 14px;
+            border: 1px solid var(--border);
         }
-        .light-theme code, .light-theme .command-box {
-            background: var(--card-light);
-            color: #2d5be3;
-        }
+        
         pre {
-            background: var(--card-dark);
-            color: #fff;
-            padding: 18px;
-            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
             overflow-x: auto;
-            margin-bottom: 1.5em;
-            border: 1px solid var(--border-dark);
+            position: relative;
         }
-        .light-theme pre {
-            background: var(--card-light);
-            color: #222;
-            border: 1px solid var(--border-light);
+        
+        pre code {
+            background: none;
+            color: var(--text);
+            padding: 0;
+            border: none;
+            font-size: 14px;
+            line-height: 1.8;
+            display: block;
         }
-        pre code { background: none; color: inherit; font-size: 1em; padding: 0; }
-        .keyword { color: #ff6b6b; }
-        .string { color: #4ecdc4; }
-        .number { color: #f7b731; }
-        .comment { color: #888; font-style: italic; }
+        
+        .keyword { color: #c678dd; font-weight: 600; }
+        .string { color: #98c379; }
+        .number { color: #d19a66; }
+        .comment { color: var(--text-secondary); font-style: italic; }
+        
+        /* Tables */
         table {
             width: 100%;
             border-collapse: collapse;
-            background: var(--card-dark);
-            margin-bottom: 2em;
+            margin: 32px 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
         }
-        th, td {
-            border: 1px solid var(--border-dark);
-            padding: 10px;
-            text-align: left;
+        
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
         }
+        
         th {
-            background: var(--secondary);
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 14px;
+        }
+        
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+        
+        tbody tr:hover {
+            background: var(--bg-elevated);
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+        
+        .info-box.warning {
+            border-left-color: var(--accent);
+        }
+        
+        .info-box.error {
+            border-left-color: var(--danger);
+        }
+        
+        .info-box.success {
+            border-left-color: var(--success);
+        }
+        
+        .info-box-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        
+        /* Example Cards */
+        .example-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+        
+        .example-title {
+            font-size: 20px;
+            font-weight: 700;
             color: var(--primary);
+            margin-bottom: 16px;
         }
-        tr:nth-child(even) { background: #181828; }
-        .light-theme table { background: var(--card-light); }
-        .light-theme th { background: #eaf1ff; color: #2d5be3; }
-        .light-theme td, .light-theme th { border: 1px solid var(--border-light); }
-        .light-theme tr:nth-child(even) { background: #f3f6fa; }
-        a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
-        a:hover { color: #00f2fe; }
-        hr { border: none; border-top: 1px solid var(--border-dark); margin: 2.5em 0; }
-        .light-theme hr { border-top: 1px solid var(--border-light); }
-        .footer {
-            background: #0a0a14;
-            color: #b3b3b3;
+        
+        /* Footer */
+        footer {
+            margin-top: 100px;
+            padding: 60px 0 40px;
+            border-top: 1px solid var(--border);
             text-align: center;
-            padding: 40px 20px 20px 20px;
-            margin-top: 60px;
         }
+        
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
+            gap: 32px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
         }
+        
         .footer-links a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: color 0.3s;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
         }
-        .footer-links a:hover { color: #00f2fe; }
-        .theme-toggle {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 100;
-            background: var(--card-dark);
-            color: var(--primary);
-            border: none;
-            border-radius: 50px;
-            padding: 10px 22px;
-            font-size: 1em;
-            cursor: pointer;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            transition: background 0.3s, color 0.3s;
+        
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 8px 0;
         }
-        .light-theme .theme-toggle {
-            background: var(--card-light);
-            color: #2d5be3;
-        }
-        @media (max-width: 900px) {
-            .layout { flex-direction: column; }
-            .toc-sidebar {
-                width: 100%;
-                max-width: none;
-                height: auto;
-                position: static;
-                border-right: none;
-                border-bottom: 1px solid var(--border-dark);
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
             }
-            .doc-content { margin-left: 0; padding-left: 0; }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 80px 32px 80px;
+            }
+            
+            .theme-toggle {
+                top: 24px;
+                right: 24px;
+                width: 56px;
+                height: 56px;
+            }
         }
-        @media (max-width: 700px) {
-            .doc-content { padding: 20px 5vw 40px 5vw; }
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.3em; }
-            .theme-toggle { top: 10px; right: 10px; padding: 8px 14px; }
+        
+        @media (max-width: 640px) {
+            .main-content {
+                padding: 80px 20px 60px;
+            }
+            
+            .theme-toggle {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .theme-icon {
+                width: 24px;
+                height: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+    </button>
+    
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+    </button>
+    
     <div class="layout">
-        <nav class="toc-sidebar">
-            <div class="toc">
-                <h3>Table of Contents</h3>
-                <ul>
-                    <li><a href="#introduction">Introduction</a></li>
-                    <li><a href="#getting-started">Getting Started</a></li>
-                    <li><a href="#basic-concepts">Basic Concepts</a></li>
-                    <li><a href="#variables">Variables</a></li>
-                    <li><a href="#data-types">Data Types</a></li>
-                    <li><a href="#input-and-output">Input and Output</a></li>
-                    <li><a href="#operators">Operators</a></li>
-                    <li><a href="#lists">Lists</a></li>
-                    <li><a href="#control-flow">Control Flow</a></li>
-                    <li><a href="#loops">Loops</a></li>
-                    <li><a href="#functions">Functions</a></li>
-                    <li><a href="#comments">Comments</a></li>
-                    <li><a href="#best-practices">Best Practices</a></li>
-                    <li><a href="#error-messages">Error Messages</a></li>
-                    <li><a href="#examples">Examples</a></li>
-                    <li><a href="#quick-reference">Quick Reference</a></li>
-                    <li><a href="#getting-help">Getting Help</a></li>
-                </ul>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <svg viewBox="0 0 32 32" fill="none">
+                        <defs>
+                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#06b6d4"/>
+                                <stop offset="100%" style="stop-color:#8b5cf6"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="16" cy="16" r="14" stroke="url(#grad)" stroke-width="2"/>
+                        <path d="M10 12 L14 8 L22 8 L26 12 L26 20 L22 24 L14 24 L10 20 Z" stroke="url(#grad)" stroke-width="2" fill="none"/>
+                    </svg>
+                    <span>CHILD Docs</span>
+                </a>
             </div>
-        </nav>
-        <main class="doc-content">
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Getting Started</div>
+                    <ul class="nav-links">
+                        <li><a href="#introduction" class="nav-link">Introduction</a></li>
+                        <li><a href="#getting-started" class="nav-link">Installation</a></li>
+                        <li><a href="#basic-concepts" class="nav-link">Basic Concepts</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Core Features</div>
+                    <ul class="nav-links">
+                        <li><a href="#variables" class="nav-link">Variables</a></li>
+                        <li><a href="#data-types" class="nav-link">Data Types</a></li>
+                        <li><a href="#input-and-output" class="nav-link">Input & Output</a></li>
+                        <li><a href="#operators" class="nav-link">Operators</a></li>
+                        <li><a href="#lists" class="nav-link">Lists</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Control Flow</div>
+                    <ul class="nav-links">
+                        <li><a href="#control-flow" class="nav-link">Conditions</a></li>
+                        <li><a href="#loops" class="nav-link">Loops</a></li>
+                        <li><a href="#functions" class="nav-link">Functions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Advanced</div>
+                    <ul class="nav-links">
+                        <li><a href="#comments" class="nav-link">Comments</a></li>
+                        <li><a href="#best-practices" class="nav-link">Best Practices</a></li>
+                        <li><a href="#error-messages" class="nav-link">Error Messages</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Reference</div>
+                    <ul class="nav-links">
+                        <li><a href="#examples" class="nav-link">Examples</a></li>
+                        <li><a href="#quick-reference" class="nav-link">Quick Reference</a></li>
+                        <li><a href="#getting-help" class="nav-link">Getting Help</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
             <h1 id="introduction">CHILD Documentation</h1>
-            <p>Welcome to the official documentation for the CHILD programming language.</p>
+            <p>Welcome to the official documentation for the CHILD programming language. This guide will teach you everything you need to know to start coding with CHILD.</p>
+            
             <hr>
-
+            
             <h2 id="introduction">Introduction</h2>
-            <p>CHILD (Computational High-level Instruction Language for Dummies) is a beginner-friendly programming language that uses simple, English-like syntax. It's designed for people who find traditional programming languages intimidating.</p>
+            <p>CHILD (Computational High-level Instruction Language for Dummies) is a beginner-friendly programming language designed with simplicity at its core. Write code that reads like English, without the intimidating syntax of traditional programming languages.</p>
+            
             <h3>Philosophy</h3>
             <ul>
-                <li><b>Readable</b>: Code should read like English</li>
-                <li><b>Simple</b>: No confusing symbols or syntax</li>
-                <li><b>Intuitive</b>: Commands do what they say</li>
-                <li><b>Accessible</b>: Anyone can learn to code</li>
+                <li><strong>Readable:</strong> Code should read like plain English</li>
+                <li><strong>Simple:</strong> No confusing symbols or cryptic syntax</li>
+                <li><strong>Intuitive:</strong> Commands do exactly what they say</li>
+                <li><strong>Accessible:</strong> Anyone can learn to program</li>
             </ul>
+            
             <h3>Who Is CHILD For?</h3>
             <ul>
                 <li>Complete programming beginners</li>
                 <li>People intimidated by traditional syntax</li>
                 <li>Students learning computational thinking</li>
                 <li>Anyone who wants to automate simple tasks</li>
+                <li>Educators teaching programming concepts</li>
             </ul>
+            
             <hr>
-
+            
             <h2 id="getting-started">Getting Started</h2>
+            
             <h3>Installation</h3>
+            <p>Follow these steps to install CHILD on your machine:</p>
+            
             <ol>
-                <li>Download <code>child.py</code> from the repository</li>
-                <li>Make sure Python 3.6+ is installed</li>
-                <li>Run your first program:</li>
+                <li>Download <code>child.py</code> from the <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies" target="_blank">GitHub repository</a></li>
+                <li>Ensure Python 3.6 or higher is installed on your system</li>
+                <li>Run your first program using the command below</li>
             </ol>
+            
             <pre><code>python child.py myprogram.child</code></pre>
+            
             <h3>Your First Program</h3>
-            <p>Create a file called <code>hello.child</code>:</p>
-            <pre><code>say "Hello, World!"</code></pre>
-            <p>Run it:</p>
+            <p>Create a file called <code>hello.child</code> with the following content:</p>
+            
+            <pre><code><span class="keyword">say</span> <span class="string">"Hello, World!"</span></code></pre>
+            
+            <p>Run it from your terminal:</p>
+            
             <pre><code>python child.py hello.child</code></pre>
-            <h3>CHILD VS Code Extension</h3>
-            <div class="step">
-                <div class="step-title">3. Install the CHILD VS Code Extension (.vsix)</div>
-                <ol>
-                    <li>
-                        <b>Download the VSIX file:</b><br>
-                        Go to the <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies" target="_blank">GitHub repository</a> and download the <code>child-language-1.0.0.vsix</code> file. You’ll find it in the main folder or under <b>releases</b>.
-                    </li>
-                    <li>
-                        <b>Open Visual Studio Code.</b>
-                    </li>
-                    <li>
-                        <b>Install the extension:</b><br>
-                        In VS Code, press <b>Ctrl+Shift+P</b> (or <b>Cmd+Shift+P</b> on Mac) to open the Command Palette.<br>
-                        Type <b>Extensions: Install from VSIX...</b> and select it.<br>
-                        Browse to the <code>.vsix</code> file you just downloaded and open it.
-                    </li>
-                    <li>
-                        <b>Done!</b> The CHILD extension is now installed. You only need to do this <b>once</b>—next time you open VS Code, it will be ready to use!
-                    </li>
-                </ol>
-                <p>
-                    <b>Tip:</b> You do <u>not</u> need to repeat these steps every time. Once installed, the extension stays in VS Code until you remove it.
-                </p>
+            
+            <div class="info-box success">
+                <div class="info-box-title">✓ Success!</div>
+                <p style="margin: 0;">You've just written and executed your first CHILD program!</p>
             </div>
+            
+            <h3>VS Code Extension</h3>
+            <p>For the best development experience, install the CHILD VS Code extension:</p>
+            
+            <ol>
+                <li>Download <code>child-language-1.0.0.vsix</code> from the repository</li>
+                <li>Open VS Code and press <code>Ctrl+Shift+P</code> (or <code>Cmd+Shift+P</code> on Mac)</li>
+                <li>Type "Extensions: Install from VSIX..." and select it</li>
+                <li>Browse to the downloaded <code>.vsix</code> file and install</li>
+            </ol>
+            
+            <div class="info-box">
+                <div class="info-box-title">💡 Pro Tip</div>
+                <p style="margin: 0;">The extension includes syntax highlighting, snippets, and auto-completion. You only need to install it once!</p>
+            </div>
+            
             <hr>
-
+            
             <h2 id="basic-concepts">Basic Concepts</h2>
+            
             <h3>File Extension</h3>
-            <p>CHILD programs use <code>.child</code> or <code>.chld</code> extensions.</p>
+            <p>CHILD programs use the <code>.child</code> or <code>.chld</code> file extension.</p>
+            
             <h3>Case Sensitivity</h3>
-            <p>CHILD keywords are case-sensitive. Use lowercase for all commands.</p>
-            <ul>
-                <li>✅ Correct: <code>say "Hello"</code></li>
-                <li>❌ Wrong: <code>SAY "Hello"</code></li>
-            </ul>
-            <h3>Whitespace</h3>
-            <p>Indentation is recommended for readability but not required.</p>
-            <hr>
+            <p>All CHILD keywords are case-sensitive and must be written in lowercase:</p>
+            
+            <pre><code><span class="comment">// ✓ Correct</span>
+<span class="keyword">say</span> <span class="string">"Hello"</span>
 
+<span class="comment">// ✗ Wrong</span>
+SAY <span class="string">"Hello"</span></code></pre>
+            
+            <h3>Whitespace</h3>
+            <p>While indentation is recommended for readability, CHILD doesn't strictly require it. However, clean formatting makes your code easier to understand.</p>
+            
+            <hr>
+            
             <h2 id="variables">Variables</h2>
-            <p>Variables store values that you can use later in your program.</p>
+            <p>Variables store values that you can reuse throughout your program.</p>
+            
             <h3>Syntax</h3>
-            <pre><code>remember VALUE as VARIABLENAME</code></pre>
+            <pre><code><span class="keyword">remember</span> VALUE <span class="keyword">as</span> VARIABLENAME</code></pre>
+            
             <h3>Examples</h3>
-            <pre><code>remember 10 as age
-remember "Alice" as name
-remember 3.14 as pi
-remember 5 + 3 as sum</code></pre>
+            <pre><code><span class="keyword">remember</span> <span class="number">10</span> <span class="keyword">as</span> age
+<span class="keyword">remember</span> <span class="string">"Alice"</span> <span class="keyword">as</span> name
+<span class="keyword">remember</span> <span class="number">3.14</span> <span class="keyword">as</span> pi
+<span class="keyword">remember</span> <span class="number">5</span> + <span class="number">3</span> <span class="keyword">as</span> sum</code></pre>
+            
             <h3>Variable Names</h3>
-            <p><b>Rules:</b></p>
+            <p><strong>Rules for variable names:</strong></p>
             <ul>
                 <li>Must start with a letter or underscore</li>
                 <li>Can contain letters, numbers, and underscores</li>
-                <li>Cannot be a keyword (<code>say</code>, <code>remember</code>, <code>if</code>, etc.)</li>
-                <li>Case-sensitive (<code>age</code> and <code>Age</code> are different)</li>
+                <li>Cannot be a reserved keyword</li>
+                <li>Are case-sensitive (<code>age</code> and <code>Age</code> are different)</li>
             </ul>
-            <p><b>Good names:</b></p>
-            <pre><code>remember 25 as userAge
-remember "blue" as favoriteColor
-remember 100 as total_score</code></pre>
-            <p><b>Avoid:</b></p>
-            <pre><code>remember 25 as x           // Too vague
-remember "blue" as a       // Not descriptive
-remember 100 as TOTAL      // All caps (conventional for constants)</code></pre>
+            
+            <div class="info-box success">
+                <div class="info-box-title">✓ Good Names</div>
+                <pre style="margin: 8px 0 0 0;"><code><span class="keyword">remember</span> <span class="number">25</span> <span class="keyword">as</span> userAge
+<span class="keyword">remember</span> <span class="string">"blue"</span> <span class="keyword">as</span> favoriteColor
+<span class="keyword">remember</span> <span class="number">100</span> <span class="keyword">as</span> total_score</code></pre>
+            </div>
+            
+            <div class="info-box error">
+                <div class="info-box-title">✗ Avoid</div>
+                <pre style="margin: 8px 0 0 0;"><code><span class="keyword">remember</span> <span class="number">25</span> <span class="keyword">as</span> x           <span class="comment">// Too vague</span>
+<span class="keyword">remember</span> <span class="string">"blue"</span> <span class="keyword">as</span> a       <span class="comment">// Not descriptive</span></code></pre>
+            </div>
+            
             <hr>
-
+            
             <h2 id="data-types">Data Types</h2>
-            <p>CHILD automatically determines data types.</p>
+            <p>CHILD automatically determines the type of data you're working with.</p>
+            
             <h3>Numbers</h3>
-            <b>Integers:</b>
-            <pre><code>remember 42 as wholeNumber
-remember -17 as negativeNumber</code></pre>
-            <b>Decimals:</b>
-            <pre><code>remember 3.14 as pi
-remember -0.5 as half</code></pre>
+            <p><strong>Integers (whole numbers):</strong></p>
+            <pre><code><span class="keyword">remember</span> <span class="number">42</span> <span class="keyword">as</span> wholeNumber
+<span class="keyword">remember</span> <span class="number">-17</span> <span class="keyword">as</span> negativeNumber</code></pre>
+            
+            <p><strong>Decimals (floating-point numbers):</strong></p>
+            <pre><code><span class="keyword">remember</span> <span class="number">3.14</span> <span class="keyword">as</span> pi
+<span class="keyword">remember</span> <span class="number">-0.5</span> <span class="keyword">as</span> half</code></pre>
+            
             <h3>Strings</h3>
             <p>Text wrapped in double quotes:</p>
-            <pre><code>remember "Hello" as greeting
-remember "123" as textNumber  // This is text, not a number</code></pre>
+            <pre><code><span class="keyword">remember</span> <span class="string">"Hello"</span> <span class="keyword">as</span> greeting
+<span class="keyword">remember</span> <span class="string">"123"</span> <span class="keyword">as</span> textNumber  <span class="comment">// This is text, not a number</span></code></pre>
+            
             <h3>Lists</h3>
             <p>Collections of items:</p>
-            <pre><code>list [1, 2, 3, 4, 5] as numbers
-list ["red", "green", "blue"] as colors
-list [] as emptyList</code></pre>
+            <pre><code><span class="keyword">list</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>] <span class="keyword">as</span> numbers
+<span class="keyword">list</span> [<span class="string">"red"</span>, <span class="string">"green"</span>, <span class="string">"blue"</span>] <span class="keyword">as</span> colors
+<span class="keyword">list</span> [] <span class="keyword">as</span> emptyList</code></pre>
+            
             <hr>
-
+            
             <h2 id="input-and-output">Input and Output</h2>
+            
             <h3>SAY - Output</h3>
             <p>Print values to the screen:</p>
-            <pre><code>say "Hello!"
-say 42
-say myVariable</code></pre>
-            <b>Multiple lines:</b>
-            <pre><code>say "Line 1"
-say "Line 2"
-say "Line 3"</code></pre>
-            <b>Combining text:</b>
-            <pre><code>remember "World" as place
-say "Hello, " + place + "!"</code></pre>
+            
+            <pre><code><span class="keyword">say</span> <span class="string">"Hello!"</span>
+<span class="keyword">say</span> <span class="number">42</span>
+<span class="keyword">say</span> myVariable</code></pre>
+            
+            <p><strong>Multiple lines:</strong></p>
+            <pre><code><span class="keyword">say</span> <span class="string">"Line 1"</span>
+<span class="keyword">say</span> <span class="string">"Line 2"</span>
+<span class="keyword">say</span> <span class="string">"Line 3"</span></code></pre>
+            
             <h3>ASK - Input</h3>
             <p>Get information from the user:</p>
-            <pre><code>ask "What is your name?" and remember it as name
-ask "How old are you?" and remember it as age</code></pre>
-            <p><b>Note:</b> CHILD automatically converts numeric input to numbers.</p>
+            
+            <pre><code><span class="keyword">ask</span> <span class="string">"What is your name?"</span> <span class="keyword">and remember it as</span> name
+<span class="keyword">ask</span> <span class="string">"How old are you?"</span> <span class="keyword">and remember it as</span> age</code></pre>
+            
+            <div class="info-box">
+                <div class="info-box-title">Note</div>
+                <p style="margin: 0;">CHILD automatically converts numeric input to numbers when appropriate.</p>
+            </div>
+            
             <hr>
-
+            
             <h2 id="operators">Operators</h2>
+            
             <h3>Arithmetic Operators</h3>
-            <pre><code>remember 10 + 5 as sum          // 15
-remember 10 - 5 as difference   // 5
-remember 10 * 5 as product      // 50
-remember 10 / 5 as quotient     // 2</code></pre>
-            <b>Order of operations</b> (same as math):
-            <pre><code>remember 2 + 3 * 4 as result    // 14 (not 20)
-remember (2 + 3) * 4 as result  // 20</code></pre>
+            <pre><code><span class="keyword">remember</span> <span class="number">10</span> + <span class="number">5</span> <span class="keyword">as</span> sum          <span class="comment">// 15</span>
+<span class="keyword">remember</span> <span class="number">10</span> - <span class="number">5</span> <span class="keyword">as</span> difference   <span class="comment">// 5</span>
+<span class="keyword">remember</span> <span class="number">10</span> * <span class="number">5</span> <span class="keyword">as</span> product      <span class="comment">// 50</span>
+<span class="keyword">remember</span> <span class="number">10</span> / <span class="number">5</span> <span class="keyword">as</span> quotient     <span class="comment">// 2</span></code></pre>
+            
+            <p><strong>Order of operations</strong> (same as mathematics):</p>
+            <pre><code><span class="keyword">remember</span> <span class="number">2</span> + <span class="number">3</span> * <span class="number">4</span> <span class="keyword">as</span> result    <span class="comment">// 14 (not 20)</span>
+<span class="keyword">remember</span> (<span class="number">2</span> + <span class="number">3</span>) * <span class="number">4</span> <span class="keyword">as</span> result  <span class="comment">// 20</span></code></pre>
+            
             <h3>Comparison Operators</h3>
             <ul>
                 <li><code>is</code> - equals</li>
                 <li><code>is not</code> - not equals</li>
                 <li><code>is bigger than</code> - greater than</li>
                 <li><code>is smaller than</code> - less than</li>
+                <li><code>is greater than or equal to</code> - greater than or equal</li>
             </ul>
-            <pre><code>if age is 18 then
-    say "Exactly 18!"
-end
+            
+            <pre><code><span class="keyword">if</span> age <span class="keyword">is</span> <span class="number">18</span> <span class="keyword">then</span>
+    <span class="keyword">say</span> <span class="string">"Exactly 18!"</span>
+<span class="keyword">end</span>
 
-if score is not 0 then
-    say "You scored!"
-end
-
-if temperature is bigger than 30 then
-    say "It's hot!"
-end
-
-if price is smaller than 10 then
-    say "Affordable!"
-end</code></pre>
+<span class="keyword">if</span> temperature <span class="keyword">is bigger than</span> <span class="number">30</span> <span class="keyword">then</span>
+    <span class="keyword">say</span> <span class="string">"It's hot!"</span>
+<span class="keyword">end</span></code></pre>
+            
             <hr>
-
+            
             <h2 id="lists">Lists</h2>
-            <p>Lists store multiple values in order.</p>
+            <p>Lists store multiple values in an ordered collection.</p>
+            
             <h3>Creating Lists</h3>
-            <pre><code>list [1, 2, 3, 4, 5] as numbers
-list ["apple", "banana", "cherry"] as fruits
-list [] as emptyList</code></pre>
+            <pre><code><span class="keyword">list</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>] <span class="keyword">as</span> numbers
+<span class="keyword">list</span> [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>] <span class="keyword">as</span> fruits
+<span class="keyword">list</span> [] <span class="keyword">as</span> emptyList</code></pre>
+            
             <h3>Adding Items</h3>
-            <pre><code>list [1, 2, 3] as numbers
-add 4 to numbers
-// numbers is now [1, 2, 3, 4]</code></pre>
+            <pre><code><span class="keyword">list</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] <span class="keyword">as</span> numbers
+<span class="keyword">add</span> <span class="number">4</span> <span class="keyword">to</span> numbers
+<span class="comment">// numbers is now [1, 2, 3, 4]</span></code></pre>
+            
             <h3>Getting Items</h3>
-            <p>Lists start counting at 0:</p>
-            <pre><code>list ["red", "green", "blue"] as colors
-get item 0 from colors as first    // "red"
-get item 1 from colors as second   // "green"
-get item 2 from colors as third    // "blue"</code></pre>
+            <p>Lists start counting at 0 (zero-indexed):</p>
+            <pre><code><span class="keyword">list</span> [<span class="string">"red"</span>, <span class="string">"green"</span>, <span class="string">"blue"</span>] <span class="keyword">as</span> colors
+<span class="keyword">get item</span> <span class="number">0</span> <span class="keyword">from</span> colors <span class="keyword">as</span> first    <span class="comment">// "red"</span>
+<span class="keyword">get item</span> <span class="number">1</span> <span class="keyword">from</span> colors <span class="keyword">as</span> second   <span class="comment">// "green"</span>
+<span class="keyword">get item</span> <span class="number">2</span> <span class="keyword">from</span> colors <span class="keyword">as</span> third    <span class="comment">// "blue"</span></code></pre>
+            
             <h3>List Size</h3>
-            <pre><code>list [10, 20, 30, 40, 50] as numbers
-size of numbers as count
-say count  // Shows: 5</code></pre>
+            <pre><code><span class="keyword">list</span> [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>] <span class="keyword">as</span> numbers
+<span class="keyword">size of</span> numbers <span class="keyword">as</span> count
+<span class="keyword">say</span> count  <span class="comment">// Shows: 5</span></code></pre>
+            
             <h3>Looping Through Lists</h3>
-            <pre><code>list ["dog", "cat", "bird"] as animals
-for each item in animals as animal
-    say animal
-end</code></pre>
+            <pre><code><span class="keyword">list</span> [<span class="string">"dog"</span>, <span class="string">"cat"</span>, <span class="string">"bird"</span>] <span class="keyword">as</span> animals
+<span class="keyword">for each item in</span> animals <span class="keyword">as</span> animal
+    <span class="keyword">say</span> animal
+<span class="keyword">end</span></code></pre>
+            
             <hr>
-
+            
             <h2 id="control-flow">Control Flow</h2>
+            
             <h3>IF Statements</h3>
-            <p>Execute code only if a condition is true:</p>
-            <pre><code>if CONDITION then
-    // code here
-end</code></pre>
-            <b>Example:</b>
-            <pre><code>remember 15 as age
-if age is bigger than 12 then
-    say "You're a teenager!"
-end</code></pre>
+            <p>Execute code only when a condition is true:</p>
+            
+            <pre><code><span class="keyword">if</span> CONDITION <span class="keyword">then</span>
+    <span class="comment">// code here</span>
+<span class="keyword">end</span></code></pre>
+            
+            <div class="example-card">
+                <div class="example-title">Example: Age Check</div>
+                <pre style="margin: 0;"><code><span class="keyword">remember</span> <span class="number">15</span> <span class="keyword">as</span> age
+<span class="keyword">if</span> age <span class="keyword">is bigger than</span> <span class="number">12</span> <span class="keyword">then</span>
+    <span class="keyword">say</span> <span class="string">"You're a teenager!"</span>
+<span class="keyword">end</span></code></pre>
+            </div>
+            
             <h3>IF-OTHERWISE (Else)</h3>
-            <p>Execute different code based on a condition:</p>
-            <pre><code>if CONDITION then
-    // code if true
-otherwise
-    // code if false
-end</code></pre>
-            <b>Example:</b>
-            <pre><code>remember 85 as score
-if score is bigger than 60 then
-    say "You passed!"
-otherwise
-    say "Try again!"
-end</code></pre>
+            <p>Execute different code based on whether a condition is true or false:</p>
+            
+            <pre><code><span class="keyword">if</span> CONDITION <span class="keyword">then</span>
+    <span class="comment">// code if true</span>
+<span class="keyword">otherwise</span>
+    <span class="comment">// code if false</span>
+<span class="keyword">end</span></code></pre>
+            
+            <div class="example-card">
+                <div class="example-title">Example: Pass/Fail</div>
+                <pre style="margin: 0;"><code><span class="keyword">remember</span> <span class="number">85</span> <span class="keyword">as</span> score
+<span class="keyword">if</span> score <span class="keyword">is bigger than</span> <span class="number">60</span> <span class="keyword">then</span>
+    <span class="keyword">say</span> <span class="string">"You passed!"</span>
+<span class="keyword">otherwise</span>
+    <span class="keyword">say</span> <span class="string">"Try again!"</span>
+<span class="keyword">end</span></code></pre>
+            </div>
+            
             <h3>Nested IF Statements</h3>
-            <pre><code>remember 85 as score
+            <pre><code><span class="keyword">remember</span> <span class="number">85</span> <span class="keyword">as</span> score
 
-if score is bigger than 89 then
-    say "Grade: A"
-otherwise
-    if score is bigger than 79 then
-        say "Grade: B"
-    otherwise
-        if score is bigger than 69 then
-            say "Grade: C"
-        otherwise
-            say "Grade: F"
-        end
-    end
-end</code></pre>
+<span class="keyword">if</span> score <span class="keyword">is bigger than</span> <span class="number">89</span> <span class="keyword">then</span>
+    <span class="keyword">say</span> <span class="string">"Grade: A"</span>
+<span class="keyword">otherwise</span>
+    <span class="keyword">if</span> score <span class="keyword">is bigger than</span> <span class="number">79</span> <span class="keyword">then</span>
+        <span class="keyword">say</span> <span class="string">"Grade: B"</span>
+    <span class="keyword">otherwise</span>
+        <span class="keyword">say</span> <span class="string">"Grade: C"</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code></pre>
+            
             <hr>
-
+            
             <h2 id="loops">Loops</h2>
+            
             <h3>REPEAT - Fixed Iterations</h3>
             <p>Repeat code a specific number of times:</p>
-            <pre><code>repeat NUMBER times
-    // code here
-end</code></pre>
-            <b>Example:</b>
-            <pre><code>repeat 5 times
-    say "Hello!"
-end</code></pre>
-            <b>With variables:</b>
-            <pre><code>remember 3 as count
-repeat count times
-    say "Counting..."
-end</code></pre>
+            
+            <pre><code><span class="keyword">repeat</span> NUMBER <span class="keyword">times</span>
+    <span class="comment">// code here</span>
+<span class="keyword">end</span></code></pre>
+            
+            <div class="example-card">
+                <div class="example-title">Example: Hello 5 Times</div>
+                <pre style="margin: 0;"><code><span class="keyword">repeat</span> <span class="number">5</span> <span class="keyword">times</span>
+    <span class="keyword">say</span> <span class="string">"Hello!"</span>
+<span class="keyword">end</span></code></pre>
+            </div>
+            
             <h3>COUNT - Range Loop</h3>
             <p>Count through a range of numbers:</p>
-            <pre><code>count from START to END as VARIABLE
-    // code here
-end</code></pre>
-            <b>Example:</b>
-            <pre><code>count from 1 to 5 as number
-    say number
-end
-// Output: 1, 2, 3, 4, 5</code></pre>
-            <b>Countdown:</b>
-            <pre><code>count from 10 to 1 as number
-    say number
-end
-say "Blastoff!"</code></pre>
+            
+            <pre><code><span class="keyword">count from</span> START <span class="keyword">to</span> END <span class="keyword">as</span> VARIABLE
+    <span class="comment">// code here</span>
+<span class="keyword">end</span></code></pre>
+            
+            <div class="example-card">
+                <div class="example-title">Example: Count 1 to 5</div>
+                <pre style="margin: 0;"><code><span class="keyword">count from</span> <span class="number">1</span> <span class="keyword">to</span> <span class="number">5</span> <span class="keyword">as</span> number
+    <span class="keyword">say</span> number
+<span class="keyword">end</span>
+<span class="comment">// Output: 1, 2, 3, 4, 5</span></code></pre>
+            </div>
+            
             <h3>FOR EACH - Iterate Through Lists</h3>
             <p>Loop through each item in a list:</p>
-            <pre><code>for each item in LISTNAME as VARIABLE
-    // code here
-end</code></pre>
-            <b>Example:</b>
-            <pre><code>list ["apple", "banana", "cherry"] as fruits
-for each item in fruits as fruit
-    say fruit
-end</code></pre>
+            
+            <pre><code><span class="keyword">for each item in</span> LISTNAME <span class="keyword">as</span> VARIABLE
+    <span class="comment">// code here</span>
+<span class="keyword">end</span></code></pre>
+            
+            <div class="example-card">
+                <div class="example-title">Example: Print Fruits</div>
+                <pre style="margin: 0;"><code><span class="keyword">list</span> [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>] <span class="keyword">as</span> fruits
+<span class="keyword">for each item in</span> fruits <span class="keyword">as</span> fruit
+    <span class="keyword">say</span> fruit
+<span class="keyword">end</span></code></pre>
+            </div>
+            
             <hr>
-
+            
             <h2 id="functions">Functions</h2>
-            <p>Functions let you teach CHILD new commands.</p>
+            <p>Functions let you teach CHILD new reusable commands.</p>
+            
             <h3>Defining Functions</h3>
-            <b>Simple function:</b>
-            <pre><code>learn how to FUNCTIONNAME
-    // code here
-end</code></pre>
-            <b>Function with parameters:</b>
-            <pre><code>learn how to FUNCTIONNAME with PARAM1 and PARAM2
-    // code here
-end</code></pre>
+            <p><strong>Simple function (no parameters):</strong></p>
+            <pre><code><span class="keyword">learn how to</span> FUNCTIONNAME
+    <span class="comment">// code here</span>
+<span class="keyword">end</span></code></pre>
+            
+            <p><strong>Function with parameters:</strong></p>
+            <pre><code><span class="keyword">learn how to</span> FUNCTIONNAME <span class="keyword">with</span> PARAM1 <span class="keyword">and</span> PARAM2
+    <span class="comment">// code here</span>
+<span class="keyword">end</span></code></pre>
+            
             <h3>Calling Functions</h3>
-            <pre><code>do FUNCTIONNAME
-do FUNCTIONNAME with VALUE1 and VALUE2</code></pre>
+            <pre><code><span class="keyword">do</span> FUNCTIONNAME
+<span class="keyword">do</span> FUNCTIONNAME <span class="keyword">with</span> VALUE1 <span class="keyword">and</span> VALUE2</code></pre>
+            
             <h3>Examples</h3>
-            <b>No parameters:</b>
-            <pre><code>learn how to sayHello
-    say "Hello, World!"
-    say "Welcome to CHILD!"
-end
+            
+            <div class="example-card">
+                <div class="example-title">Example 1: No Parameters</div>
+                <pre style="margin: 0;"><code><span class="keyword">learn how to</span> sayHello
+    <span class="keyword">say</span> <span class="string">"Hello, World!"</span>
+    <span class="keyword">say</span> <span class="string">"Welcome to CHILD!"</span>
+<span class="keyword">end</span>
 
-do sayHello</code></pre>
-            <b>One parameter:</b>
-            <pre><code>learn how to greet with name
-    say "Hello, "
-    say name
-    say "Nice to meet you!"
-end
+<span class="keyword">do</span> sayHello</code></pre>
+            </div>
+            
+            <div class="example-card">
+                <div class="example-title">Example 2: One Parameter</div>
+                <pre style="margin: 0;"><code><span class="keyword">learn how to</span> greet <span class="keyword">with</span> name
+    <span class="keyword">say</span> <span class="string">"Hello, "</span>
+    <span class="keyword">say</span> name
+    <span class="keyword">say</span> <span class="string">"!"</span>
+<span class="keyword">end</span>
 
-do greet with "Alice"
-do greet with "Bob"</code></pre>
-            <b>Multiple parameters:</b>
-            <pre><code>learn how to add with a and b
-    remember a + b as sum
-    say "The sum is: "
-    say sum
-end
+<span class="keyword">do</span> greet <span class="keyword">with</span> <span class="string">"Alice"</span>
+<span class="keyword">do</span> greet <span class="keyword">with</span> <span class="string">"Bob"</span></code></pre>
+            </div>
+            
+            <div class="example-card">
+                <div class="example-title">Example 3: Multiple Parameters</div>
+                <pre style="margin: 0;"><code><span class="keyword">learn how to</span> add <span class="keyword">with</span> a <span class="keyword">and</span> b
+    <span class="keyword">remember</span> a + b <span class="keyword">as</span> sum
+    <span class="keyword">say</span> <span class="string">"The sum is: "</span>
+    <span class="keyword">say</span> sum
+<span class="keyword">end</span>
 
-do add with 5 and 7
-do add with 100 and 50</code></pre>
-            <b>Complex function:</b>
-            <pre><code>learn how to printPattern with rows
-    count from 1 to rows as i
-        repeat i times
-            say "* "
-        end
-        say ""
-    end
-end
-
-do printPattern with 5</code></pre>
+<span class="keyword">do</span> add <span class="keyword">with</span> <span class="number">5</span> <span class="keyword">and</span> <span class="number">7</span></code></pre>
+            </div>
+            
             <hr>
-
+            
             <h2 id="comments">Comments</h2>
-            <p>Comments are notes for yourself that CHILD ignores.</p>
+            <p>Comments are notes for yourself that CHILD ignores when running your program.</p>
+            
             <h3>Syntax</h3>
-            <pre><code>// This is a comment</code></pre>
+            <pre><code><span class="comment">// This is a comment</span></code></pre>
+            
             <h3>Examples</h3>
-            <pre><code>// Calculate the total price
-remember price * quantity as total
+            <pre><code><span class="comment">// Calculate the total price</span>
+<span class="keyword">remember</span> price * quantity <span class="keyword">as</span> total
 
-say "Total: "  // Display the result
-say total</code></pre>
-            <b>Best practices:</b>
-            <ul>
-                <li>Explain WHY, not WHAT</li>
-                <li>Keep comments concise</li>
-                <li>Update comments when code changes</li>
-            </ul>
+<span class="keyword">say</span> <span class="string">"Total: "</span>  <span class="comment">// Display the result</span>
+<span class="keyword">say</span> total</code></pre>
+            
+            <div class="info-box">
+                <div class="info-box-title">Best Practices</div>
+                <ul style="margin: 8px 0 0 0;">
+                    <li>Explain WHY, not WHAT (code already shows what it does)</li>
+                    <li>Keep comments concise and relevant</li>
+                    <li>Update comments when code changes</li>
+                    <li>Don't over-comment obvious code</li>
+                </ul>
+            </div>
+            
             <hr>
-
+            
             <h2 id="best-practices">Best Practices</h2>
+            
             <h3>1. Use Descriptive Names</h3>
-            <b>✅ Good:</b>
-            <pre><code>remember 25 as studentAge
-remember "Mathematics" as courseName</code></pre>
-            <b>❌ Avoid:</b>
-            <pre><code>remember 25 as x
-remember "Mathematics" as c</code></pre>
-            <h3>2. Add Comments</h3>
-            <pre><code>// Calculate discount for premium members
-if memberType is "premium" then
-    remember price * 0.8 as discountedPrice
-end</code></pre>
-            <h3>3. Break Down Complex Problems</h3>
-            <pre><code>// Instead of one long function...
-learn how to processOrder with orderData
-    do validateOrder with orderData
-    do calculateTotal with orderData
-    do sendConfirmation with orderData
-end</code></pre>
-            <h3>4. Keep Functions Small</h3>
-            <p>Each function should do ONE thing well.</p>
-            <h3>5. Test Your Code</h3>
-            <p>Test edge cases:</p>
-            <pre><code>// What if the list is empty?
-// What if the number is negative?
-// What if the user enters text instead of a number?</code></pre>
-            <hr>
-
-            <h2 id="error-messages">Error Messages</h2>
-            <p>CHILD provides helpful error messages:</p>
-            <h3>Common Errors</h3>
-            <b>Syntax Error:</b>
-            <pre><code>Oops! Error on line 5: Don't understand this command: sya "Hello"</code></pre>
-            <p>Fix: Check spelling of commands</p>
-            <b>Variable Not Found:</b>
-            <pre><code>Oops! Error on line 3: name 'userAge' is not defined</code></pre>
-            <p>Fix: Make sure you <code>remember</code> the variable first</p>
-            <b>Missing 'end':</b>
-            <pre><code>Oops! Error on line 10: Missing 'end' statement</code></pre>
-            <p>Fix: Add <code>end</code> to close your <code>if</code>, <code>repeat</code>, <code>count</code>, or <code>learn</code> block</p>
-            <b>Wrong Number of Parameters:</b>
-            <pre><code>Oops! Error on line 8: 'greet' needs 1 things, but got 2</code></pre>
-            <p>Fix: Check function definition</p>
-            <hr>
-
-            <h2 id="examples">Examples</h2>
-            <h3>Example 1: Temperature Converter</h3>
-            <pre><code>say "=== Temperature Converter ==="
-ask "Enter temperature in Celsius:" and remember it as celsius
-
-remember celsius * 9 / 5 + 32 as fahrenheit
-
-say "Temperature in Fahrenheit: "
-say fahrenheit</code></pre>
-            <h3>Example 2: Grade Calculator</h3>
-            <pre><code>learn how to calculateGrade with score
-    if score is bigger than 89 then
-        say "Grade: A"
-    otherwise
-        if score is bigger than 79 then
-            say "Grade: B"
-        otherwise
-            if score is bigger than 69 then
-                say "Grade: C"
-            otherwise
-                say "Grade: F"
-            end
-        end
-    end
-end
-
-ask "Enter your score:" and remember it as studentScore
-do calculateGrade with studentScore</code></pre>
-            <h3>Example 3: Shopping List Manager</h3>
-            <pre><code>list [] as shoppingList
-
-say "=== Shopping List Manager ==="
-
-repeat 3 times
-    ask "Add an item:" and remember it as item
-    add item to shoppingList
-end
-
-say ""
-say "Your shopping list:"
-for each item in shoppingList as item
-    say "- "
-    say item
-end
-
-size of shoppingList as totalItems
-say ""
-say "Total items: "
-say totalItems</code></pre>
-            <h3>Example 4: Number Pattern</h3>
-            <pre><code>learn how to printTriangle with height
-    count from 1 to height as row
-        repeat row times
-            say "* "
-        end
-        say ""
-    end
-end
-
-ask "Enter triangle height:" and remember it as size
-do printTriangle with size</code></pre>
-            <hr>
-
-            <h2 id="quick-reference">Quick Reference</h2>
-            <table>
-                <tr><th>Command</th><th>Usage</th><th>Example</th></tr>
-                <tr><td><code>say</code></td><td>Print output</td><td><code>say "Hello"</code></td></tr>
-                <tr><td><code>remember</code></td><td>Store value</td><td><code>remember 5 as x</code></td></tr>
-                <tr><td><code>ask</code></td><td>Get input</td><td><code>ask "Name?" and remember it as name</code></td></tr>
-                <tr><td><code>list</code></td><td>Create list</td><td><code>list [1, 2, 3] as nums</code></td></tr>
-                <tr><td><code>add</code></td><td>Add to list</td><td><code>add 4 to nums</code></td></tr>
-                <tr><td><code>get item</code></td><td>Get from list</td><td><code>get item 0 from nums as first</code></td></tr>
-                <tr><td><code>size of</code></td><td>List length</td><td><code>size of nums as count</code></td></tr>
-                <tr><td><code>if</code></td><td>Condition</td><td><code>if x is 5 then</code></td></tr>
-                <tr><td><code>otherwise</code></td><td>Else</td><td><code>otherwise</code></td></tr>
-                <tr><td><code>repeat</code></td><td>Loop N times</td><td><code>repeat 5 times</code></td></tr>
-                <tr><td><code>count</code></td><td>Range loop</td><td><code>count from 1 to 10 as i</code></td></tr>
-                <tr><td><code>for each</code></td><td>List loop</td><td><code>for each item in nums as n</code></td></tr>
-                <tr><td><code>learn</code></td><td>Define function</td><td><code>learn how to greet with name</code></td></tr>
-                <tr><td><code>do</code></td><td>Call function</td><td><code>do greet with "Alice"</code></td></tr>
-                <tr><td><code>end</code></td><td>End block</td><td><code>end</code></td></tr>
-                <tr><td><code>//</code></td><td>Comment</td><td><code>// This is a note</code></td></tr>
-            </table>
-            <hr>
-
-            <h2 id="getting-help">Getting Help</h2>
+            <p>Choose variable and function names that clearly describe their purpose.</p>
+            
+            <div class="info-box success">
+                <div class="info-box-title">✓ Good</div>
+                <pre style="margin: 8px 0 0 0;"><code><span class="keyword">remember</span> <span class="number">25</span> <span class="keyword">as</span> studentAge
+<span class="keyword">remember</span> <span class="string">"Mathematics"</span> <span class="keyword">as</span> courseName</code></pre>
+            </div>
+            
+            <div class="info-box error">
+                <div class="info-box-title">✗ Avoid</div>
+                <pre style="margin: 8px 0 0 0;"><code><span class="keyword">remember</span> <span class="number">25</span> <span class="keyword">as</span> x
+<span class="keyword">remember</span> <span class="string">"Mathematics"</span> <span class="keyword">as</span> c</code></pre>
+            </div>
+            
+            <h3>2. Break Down Complex Problems</h3>
+            <p>Use functions to split large problems into smaller, manageable pieces.</p>
+            
+            <pre><code><span class="keyword">learn how to</span> processOrder <span class="keyword">with</span> orderData
+    <span class="keyword">do</span> validateOrder <span class="keyword">with</span> orderData
+    <span class="keyword">do</span> calculateTotal <span class="keyword">with</span> orderData
+    <span class="keyword">do</span> sendConfirmation <span class="keyword">with</span> orderData
+<span class="keyword">end</span></code></pre>
+            
+            <h3>3. Keep Functions Small</h3>
+            <p>Each function should do ONE thing and do it well. If a function is getting too long, break it into smaller functions.</p>
+            
+            <h3>4. Test Edge Cases</h3>
+            <p>Always consider unusual inputs:</p>
             <ul>
-                <li><b>Documentation</b>: You're reading it!</li>
-                <li><b>Examples</b>: Check the <code>examples/</code> folder</li>
-                <li><b>Issues</b>: <a href="https://github.com/RoyalPgYtPc/child-language/issues">Report bugs</a></li>
-                <li><b>Discussions</b>: <a href="https://github.com/RoyalPgYtPc/child-language/discussions">Ask questions</a></li>
+                <li>What if the list is empty?</li>
+                <li>What if the number is negative?</li>
+                <li>What if the user enters text instead of a number?</li>
             </ul>
+            
             <hr>
-            <p><b>Happy Coding! 🎉</b></p>
-            <p>CHILD Language © 2025 RoyalPgYtPc | Licensed under GPL v3</p>
+            
+            <h2 id="error-messages">Error Messages</h2>
+            <p>CHILD provides helpful error messages to guide you when something goes wrong.</p>
+            
+            <h3>Common Errors</h3>
+            
+            <div class="info-box error">
+                <div class="info-box-title">Syntax Error</div>
+                <pre style="margin: 8px 0 0 0;"><code>Oops! Error on line 5: Don't understand this command: sya "Hello"</code></pre>
+                <p style="margin: 8px 0 0 0;"><strong>Fix:</strong> Check spelling of commands (should be <code>say</code>)</p>
+            </div>
+            
+            <div class="info-box error">
+                <div class="info-box-title">Variable Not Found</div>
+                <pre style="margin: 8px 0 0 0;"><code>Oops! Error on line 3: name 'userAge' is not defined</code></pre>
+                <p style="margin: 8px 0 0 0;"><strong>Fix:</strong> Make sure you use <code>remember</code> to create the variable first</p>
+            </div>
+            
+            <div class="info-box error">
+                <div class="info-box-title">Missing 'end'</div>
+                <pre style="margin: 8px 0 0 0;"><code>Oops! Error on line 10: Missing 'end' statement</code></pre>
+                <p style="margin: 8px 0 0 0;"><strong>Fix:</strong> Add <code>end</code> to close your <code>if</code>, <code>repeat</code>, <code>count</code>, or <code>learn</code> block</p>
+            </div>
+            
+            <hr>
+            
+            <h2 id="examples">Examples</h2>
+            
+            <div class="example-card">
+                <div class="example-title">Example 1: Temperature Converter</div>
+                <pre style="margin: 0;"><code><span class="keyword">say</span> <span class="string">"=== Temperature Converter ==="</span>
+<span class="keyword">ask</span> <span class="string">"Enter temperature in Celsius:"</span> <span class="keyword">and remember it as</span> celsius
+
+<span class="keyword">remember</span> celsius * <span class="number">9</span> / <span class="number">5</span> + <span class="number">32</span> <span class="keyword">as</span> fahrenheit
+
+<span class="keyword">say</span> <span class="string">"Temperature in Fahrenheit: "</span>
+<span class="keyword">say</span> fahrenheit</code></pre>
+            </div>
+            
+            <div class="example-card">
+                <div class="example-title">Example 2: Grade Calculator</div>
+                <pre style="margin: 0;"><code><span class="keyword">learn how to</span> calculateGrade <span class="keyword">with</span> score
+    <span class="keyword">if</span> score <span class="keyword">is bigger than</span> <span class="number">89</span> <span class="keyword">then</span>
+        <span class="keyword">say</span> <span class="string">"Grade: A"</span>
+    <span class="keyword">otherwise</span>
+        <span class="keyword">if</span> score <span class="keyword">is bigger than</span> <span class="number">79</span> <span class="keyword">then</span>
+            <span class="keyword">say</span> <span class="string">"Grade: B"</span>
+        <span class="keyword">otherwise</span>
+            <span class="keyword">say</span> <span class="string">"Grade: C"</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">ask</span> <span class="string">"Enter your score:"</span> <span class="keyword">and remember it as</span> studentScore
+<span class="keyword">do</span> calculateGrade <span class="keyword">with</span> studentScore</code></pre>
+            </div>
+            
+            <div class="example-card">
+                <div class="example-title">Example 3: Shopping List Manager</div>
+                <pre style="margin: 0;"><code><span class="keyword">list</span> [] <span class="keyword">as</span> shoppingList
+
+<span class="keyword">say</span> <span class="string">"=== Shopping List Manager ==="</span>
+
+<span class="keyword">repeat</span> <span class="number">3</span> <span class="keyword">times</span>
+    <span class="keyword">ask</span> <span class="string">"Add an item:"</span> <span class="keyword">and remember it as</span> item
+    <span class="keyword">add</span> item <span class="keyword">to</span> shoppingList
+<span class="keyword">end</span>
+
+<span class="keyword">say</span> <span class="string">"Your shopping list:"</span>
+<span class="keyword">for each item in</span> shoppingList <span class="keyword">as</span> item
+    <span class="keyword">say</span> item
+<span class="keyword">end</span></code></pre>
+            </div>
+            
+            <hr>
+            
+            <h2 id="quick-reference">Quick Reference</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Command</th>
+                        <th>Usage</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>say</code></td>
+                        <td>Print output</td>
+                        <td><code>say "Hello"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>remember</code></td>
+                        <td>Store value</td>
+                        <td><code>remember 5 as x</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ask</code></td>
+                        <td>Get input</td>
+                        <td><code>ask "Name?" and remember it as name</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>list</code></td>
+                        <td>Create list</td>
+                        <td><code>list [1, 2, 3] as nums</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>add</code></td>
+                        <td>Add to list</td>
+                        <td><code>add 4 to nums</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>get item</code></td>
+                        <td>Get from list</td>
+                        <td><code>get item 0 from nums as first</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>size of</code></td>
+                        <td>List length</td>
+                        <td><code>size of nums as count</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>if</code></td>
+                        <td>Condition</td>
+                        <td><code>if x is 5 then</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>otherwise</code></td>
+                        <td>Else</td>
+                        <td><code>otherwise</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>repeat</code></td>
+                        <td>Loop N times</td>
+                        <td><code>repeat 5 times</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>count</code></td>
+                        <td>Range loop</td>
+                        <td><code>count from 1 to 10 as i</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>for each</code></td>
+                        <td>List loop</td>
+                        <td><code>for each item in nums as n</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>learn</code></td>
+                        <td>Define function</td>
+                        <td><code>learn how to greet with name</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>do</code></td>
+                        <td>Call function</td>
+                        <td><code>do greet with "Alice"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>end</code></td>
+                        <td>End block</td>
+                        <td><code>end</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>//</code></td>
+                        <td>Comment</td>
+                        <td><code>// This is a note</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <hr>
+            
+            <h2 id="getting-help">Getting Help</h2>
+            
+            <p>Need assistance or have questions? Here are some resources:</p>
+            
+            <ul>
+                <li><strong>Documentation:</strong> You're reading it!</li>
+                <li><strong>Examples:</strong> Check the <code>examples/</code> folder in the repository</li>
+                <li><strong>Issues:</strong> <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues" target="_blank">Report bugs or request features</a></li>
+                <li><strong>Discussions:</strong> <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/discussions" target="_blank">Ask questions and share ideas</a></li>
+            </ul>
+            
+            <div class="info-box success">
+                <div class="info-box-title">🎉 Happy Coding!</div>
+                <p style="margin: 8px 0 0 0;">You're now ready to build amazing things with CHILD. Start small, practice often, and don't be afraid to make mistakes—that's how you learn!</p>
+            </div>
+            
+            <footer>
+                <div class="footer-links">
+                    <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub</a>
+                    <a href="index.html">Home</a>
+                    <a href="get-started.html">Get Started</a>
+                    <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
+                    <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
+                </div>
+                
+                <p class="footer-text">CHILD Language © 2025 RoyalPgYtPc</p>
+                <p class="footer-text">Licensed under GPL v3 • Open Source Forever</p>
+            </footer>
         </main>
     </div>
-    <div class="footer">
-        <div class="footer-links">
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies">GitHub</a>
-            <a href="documentation.html">Documentation</a>
-            <a href="get-started.html">Get Started</a>
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/blob/main/examples">Examples</a>
-            <a href="https://github.com/RoyalPgYtPc/CHILD-Computational-High-level-Instruction-Language-for-Dummies/issues">Report Issues</a>
-        </div>
-        <p>CHILD Language &copy; 2025 RoyalPgYtPc</p>
-        <p>Licensed under GPL v3 | Open Source Forever</p>
-    </div>
+    
     <script>
-        function setTheme(theme) {
-            if(theme === "light") {
-                document.body.classList.add("light-theme");
-                document.querySelector(".theme-toggle").textContent = "🌞 Light";
-            } else {
-                document.body.classList.remove("light-theme");
-                document.querySelector(".theme-toggle").textContent = "🌙 Dark";
-            }
-            localStorage.setItem("theme", theme);
-        }
+        // Theme Toggle
         function toggleTheme() {
-            if(document.body.classList.contains("light-theme")) {
-                setTheme("dark");
-            } else {
-                setTheme("light");
-            }
+            const body = document.body;
+            body.classList.toggle('light');
+            const theme = body.classList.contains('light') ? 'light' : 'dark';
+            localStorage.setItem('theme', theme);
         }
-        (function() {
-            let theme = localStorage.getItem("theme");
-            if(!theme) {
-                theme = window.matchMedia('(prefers-color-scheme: light)').matches ? "light" : "dark";
+        
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light');
+        }
+        
+        // Sidebar Toggle for Mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (window.innerWidth <= 1024) {
+                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
             }
-            setTheme(theme);
-        })();
+        });
+        
+        // Active Navigation Link
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('h2[id], h3[id]');
+        
+        function setActiveLink() {
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.pageYOffset >= sectionTop - 150) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', setActiveLink);
+        window.addEventListener('load', setActiveLink);
+        
+        // Close sidebar when clicking a link on mobile
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+            });
+        });
+        
+        // Smooth scroll adjustment for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 100;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
